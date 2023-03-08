@@ -1,7 +1,7 @@
 # Transportation
 
 ### Team Members
-Logan DeMars
+Logan DeMars, Luke Casesa
 
 ### Final Proposal
 1. Persona/Scenario
