@@ -4,7 +4,7 @@
 Logan DeMars, Luke Casesa
 
 ## GEOG 575 Final Project Proposal
-1. Persona/Scenario
+### Persona/Scenario
     1. Persona
 
         **Name & Position:** John Doe, President of MTA Construction & Development 
@@ -20,7 +20,7 @@ Logan DeMars, Luke Casesa
         2. **User Scenario #2:**
 
 
-2. Requirements Document    
+### Requirements Document    
 
 | Representation |               |                                                                                                                                                              |
 | :------------- | :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -44,7 +44,7 @@ Logan DeMars, Luke Casesa
 
 
     
-3. Wireframes
+### Wireframes
 
 
 
