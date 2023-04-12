@@ -13,7 +13,13 @@ Logan DeMars, Luke Casesa
 
 	    As a supervisor of a major urban center that is rapidly developing, it is important to keep up with the latest information pertaining to public transportation. For this reason, using temporal multivariate data provides crucial information for catching developing census and ridership **trends** and **patterns** early, to allow for new routes to be created and planned going forward. 
 
-    2. Scenario
+    2. Scenarios
+        1. **User Scenario #1:**
+
+        
+        2. **User Scenario #2:**
+
+
 2. Requirements Document    
 
 | Representation |               |                                                                                                                                                              |
