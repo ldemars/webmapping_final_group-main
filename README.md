@@ -22,7 +22,7 @@ Logan DeMars, Luke Casesa
 
 ### Requirements Document    
 
-|  |   Representation            |                                                                                                                                                              |
+| # |   Representation            |                                                                                                                                                              |
 | :------------- | :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1              | Basemap       | Map of entire New York City area: Street view                                                                                                                |
 | 2              | Census tracts | Census tract polygons on top of basemap and below subway/bus data https://www.nyc.gov/site/planning/data-maps/open-data/census-download-metadata.page        |
@@ -32,7 +32,7 @@ Logan DeMars, Luke Casesa
 | 6              | Legend        | Describes visual depictions of census tracts, routes, and stops                                                                                              |
 | 7              | Context       | Map information alongside guide and context for users                                                                                                        |
 
-|  |    Interaction                |                                                                                                                                                                                                                       |
+| # |    Interaction                |                                                                                                                                                                                                                       |
 | :---------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1           | Layer Toggle       | Overlay: Bus, subway, census data (income, family households, etc) layers togglable using check boxes                                                                                                                 |
 | 2           | Query Panel        | Search: User inputs census block or address, map highlights and retrieves data. Includes autofill.                                                                                                                    |
