@@ -18,6 +18,7 @@ Logan DeMars, Luke Casesa
 
 
     2. Scenario #2:
+    Upon opening the interactive, the user (John Appleseed) is prompted to choose whether to start with the subway map or the bus map. Then, the user is prompted to enter basic information about their itinerary: day of week, time of day, origin station, and destination station. From this query, the user is shown a map of their travel route. As a MTA Construction & Development Data Specialist, John is concerned about the efficiency and to see if the subway system is meeting goals without bias. The user is drawn to the polylines that represent subway lines and associates line stroke width to efficiency and performance. The user can compare different routes and route combinations to see which is the most efficient across time and space. Hovering over the 4/5/6 line, the user identifies that it has the most riders of any line in the city. The user can then go to a table ranking ridership for that specific day across all lines to see where the 4/5/6 line ranks among others. After comparing the 4/5/6 line and the N/Q/R line, John decides to take the N/Q/R line to minimize his chances of the train being full.
 
 
 ### Requirements Document    
