@@ -16,7 +16,7 @@ Logan DeMars, Luke Casesa
     2. Scenarios
         1. **User Scenario #1:**
 
-        
+
         2. **User Scenario #2:**
 
 
@@ -43,18 +43,7 @@ Logan DeMars, Luke Casesa
 | 7           | Transit Select     | Resymbolize: Line graph displays current transit data, with the present map being indicated with a highlighted dot on the graph.                                                                                      |
 
 
-    Bus & subway ridership data (csv): https://new.mta.info/agency/new-york-city-transit/subway-bus-ridership-2020 
-
-    NYC Mass Transit Spatial Layers (shp): https://www.baruch.cuny.edu/confluence/display/geoportal/NYC+Mass+Transit+Spatial+Layers+Archive  
-
-    NYC Open Data 2019 Subway Station (shp, point) https://data.cityofnewyork.us/Transportation/Subway-Stations/arq3-7z49 
-
-    NYC Open Data 2019 Subway Routes (shp, polyline) https://data.cityofnewyork.us/Transportation/Subway-Lines/3qz8-muuu
-
-    NYC census tracts (shp, polygon) https://www.nyc.gov/site/planning/data-maps/open-data/census-download-metadata.page
-
-    NYC census data (csv): https://www.nyc.gov/site/planning/planning-level/nyc-population/2020-census.page
-
+    
 3. Wireframes
 
 
