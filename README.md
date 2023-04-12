@@ -46,7 +46,7 @@ Logan DeMars, Luke Casesa
     
 ### Wireframes
 
-![alt text](https://github.com/ldemars/webmapping_final_group-main/tree/main/img/wireframe_1.jpg?raw=true)
+![wireframe_1](https://user-images.githubusercontent.com/99845984/231393174-3420a1e5-fa88-4ce4-9729-140979cdd671.jpg)
 ![alt text](https://github.com/ldemars/webmapping_final_group-main/tree/main/img/wireframe_2.jpg?raw=true)
 ![alt text](https://github.com/ldemars/webmapping_final_group-main/tree/main/img/wireframe_3.jpg?raw=true)
 
