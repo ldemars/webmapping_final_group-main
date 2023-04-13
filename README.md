@@ -25,7 +25,7 @@ Logan DeMars, Luke Casesa
 
 | # |   Representation            |                                                                                                                                                              |
 | :------------- | :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1              | Basemap       | Map of entire New York City area: Street view                                                                                                                |
+| 1              | Basemap       | Map of entire New York City area: Street view (subway lines grey until clicked or hovered on)                                                                                                                |
 | 2              | Census tracts | Census tract polygons on top of basemap and below subway/bus data https://www.nyc.gov/site/planning/data-maps/open-data/census-download-metadata.page        |
 | 3              | Subway        | Location of subway stations (points) and routes (polylines) https://www.baruch.cuny.edu/confluence/display/geoportal/NYC+Mass+Transit+Spatial+Layers+Archive |
 | 4              | Bus           | Location of bus stops (points) and routes (polylines) https://www.baruch.cuny.edu/confluence/display/geoportal/NYC+Mass+Transit+Spatial+Layers+Archive       |
@@ -35,7 +35,7 @@ Logan DeMars, Luke Casesa
 
 | # |    Interaction                |                                                                                                                                                                                                                       |
 | :---------- | :----------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1           | Layer Toggle       | Overlay: Bus, subway, census data (income, family households, etc) layers togglable using check boxes                                                                                                                 |
+| 1           | Layer Toggle       | Overlay: subway and census data (income, family households, etc) layers togglable using check boxes                                                                                                                 |
 | 2           | Query Panel        | Search: User inputs census block or address, map highlights and retrieves data. Includes autofill.                                                                                                                    |
 | 3           | Slider         | Sequence: Allows user to scroll through data from 2015-2020                                                                                                                                                           |
 | 4           | Route & Stop hover | Retrieve: Hover over bus or subway route/stop to get ridership details, list of stops, current stop.                                                                                                                  |
