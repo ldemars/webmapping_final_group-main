@@ -15,11 +15,9 @@ Logan DeMars, Luke Casesa
 
 2. User Case Scenarios
     1. Scenario #1: 
-    
     When opening the interactive NYC transportation map, the user sees the query search and decides to look up his address. The user then sees that the census tract highlighted on the map, which helps the user associate this with his location. The user notices after clicking on each station, he is able to compare and identify that the second station to his south attracts noticeably more riders than the other. Alongside the pop up, the subway lines become highlighted, showing that he can get onto the same train line using the south station. For this reason, John decides to start going to work using the south station, in order to avoid being crowded while waiting for a train. 
 
     2. Scenario #2:
-    
     Upon opening the interactive, the user (John Appleseed) is prompted to choose whether to start with the subway map or the bus map. Then, the user is prompted to enter basic information about their itinerary: day of week, time of day, origin station, and destination station. From this query, the user is shown a map of their travel route. As a MTA Construction & Development Data Specialist, John is concerned about the efficiency and to see if the subway system is meeting goals without bias. The user is drawn to the polylines that represent subway lines and associates line stroke width to efficiency and performance. The user can compare different routes and route combinations to see which is the most efficient across time and space. Hovering over the 4/5/6 line, the user identifies that it has the most riders of any line in the city. The user can then go to a table ranking ridership for that specific day across all lines to see where the 4/5/6 line ranks among others. After comparing the 4/5/6 line and the N/Q/R line, John decides to take the N/Q/R line to minimize his chances of the train being full.
 
 
