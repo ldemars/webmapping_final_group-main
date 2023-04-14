@@ -27,7 +27,7 @@ Logan DeMars, Luke Casesa
 | :------------- | :-------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1              | Basemap         | Map of entire New York City area: Street view                                                                                                         |
 | 2              | Census tracts   | Census tract polygons on top of basemap and below subway/bus data https://www.nyc.gov/site/planning/data-maps/open-data/census-download-metadata.page |
-| 3              | Subway Lines    | Location of subway routes (polylines) https://www.baruch.cuny.edu/confluence/display/geoportal/NYC+Mass+Transit+Spatial+Layers+Archive                |
+| 3              | Subway Lines    | Location of subway routes indicated by lightly colored polylines https://www.baruch.cuny.edu/confluence/display/geoportal/NYC+Mass+Transit+Spatial+Layers+Archive                |
 | 4              | Subway Stations | Location of subway stations (points) https://www.baruch.cuny.edu/confluence/display/geoportal/NYC+Mass+Transit+Spatial+Layers+Archive                 |
 | 5              | Temporal Graph  | Shows yearly ridership data for selected route/station, line graph.                                                                                   |
 | 6              | Legend          | Describes visual depictions of census tracts, routes, and stops                                                                                       |
@@ -37,7 +37,7 @@ Logan DeMars, Luke Casesa
 | :---------- | :------------------ | :--------------------------------------------------------------------------------------------------------------- |
 | 1           | Layer Toggle        | Overlay: Subway polylines/points, census polygons.                                                               |
 | 2           | Query Panel         | Search: User inputs census block or address, map highlights and retrieves data. Includes autofill.               |
-| 3           | Slider              | Sequence: Allows user to scroll through data from 2015-2020                                                      |
+| 3           | Slider              | Sequence: Allows user to scroll through ridership data from 2015-2020                                                      |
 | 4           | Route & Stop hover  | Resymbolize: Hovering over a subway route or station makes the color more prominent and darker.                  |
 | 5           | Census Tract Select | Retrieve: When a user selects a census block, a pop up displays nearest subway stops and additional information. |
 | 6           | Transit Select      | Retrieve: Popup shows ridership data. Line graph displays ridership data over time for selection.                |
