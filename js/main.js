@@ -11,6 +11,8 @@ function createMap(){
     
     //add OSM base tilelayer
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        minZoom: 3,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
     }).addTo(map);
 
@@ -22,7 +24,7 @@ function createMap(){
 function getData(map){
 
     //load the data
-    fetch("data/subway_lines.geojson")
+    fetch("data/subway_stations.geojson")
         .then(function(response){
             return response.json();
         })
@@ -30,8 +32,16 @@ function getData(map){
             //check that data loaded properly
             console.log(json);
             //create a Leaflet GeoJSON layer and add it to the map
+
+            createStation(json); //This should place the points on the map using the coordinates. Should also add the retrieve data.        
+
             L.geoJson(json).addTo(map);
         })
 };
+
+function createStation(){
+
+
+}
 
 document.addEventListener('DOMContentLoaded',createMap)
