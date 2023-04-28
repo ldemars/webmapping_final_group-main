@@ -24,7 +24,7 @@ function createMap(){
 function getData(map){
 
     //load the data
-    fetch("data/subway_stations.geojson")
+    fetch("data/tracts_rank.geojson")
         .then(function(response){
             return response.json();
         })
