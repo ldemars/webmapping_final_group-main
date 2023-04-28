@@ -23,25 +23,32 @@ function createMap(){
 //function to retrieve the data and place it on the map
 function getData(map){
 
-    //load the data
-    fetch("data/tracts_rank.geojson")
+    var filePath = ["data/tracts_rank.geojson", 
+                    "data/subway_lines.geojson", 
+                    "data/subway_stations.geojson"];
+	
+        tractData(filePath[0]);
+        //lineData(filePath[1]);
+        //stationData(filePath[2]);
+    
+};
+
+function tractData(input){
+    fetch(input)
         .then(function(response){
             return response.json();
         })
         .then(function(json){
             //check that data loaded properly
             console.log(json);
-            //create a Leaflet GeoJSON layer and add it to the map
-
-            createStation(json); //This should place the points on the map using the coordinates. Should also add the retrieve data.        
-
+            
             L.geoJson(json).addTo(map);
+            
         })
-};
-
-function createStation(){
-
-
+    
+    
 }
+
+
 
 document.addEventListener('DOMContentLoaded',createMap)
