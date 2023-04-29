@@ -25,39 +25,64 @@ function createMap(){
 
     //call getData function
     tractData(filePath[0],layerControl);
-    //lineData(filePath[1]);
-    //stationData(filePath[2]);
+    lineData(filePath[1],layerControl);
+    stationData(filePath[2],layerControl);
 };
 
 function tractData(input,layerControl){
-    var tracts; 
     
     fetch(input)
         .then(function(response){
             return response.json();
         })
-        .then(function(json){
-            
-            //L.geoJson(json).addTo(map);
-            //tracts = {"Tracts": response}; 
-            
+        .then(function(json){        
             var tracts = L.geoJson(json);
             console.log(tracts);
             layerControl.addOverlay(tracts,"Tracts");
             
             //calcStats();
             //createChoropleth();
-            //createSequenceControls();
             //createLegend();
 
             //check that data loaded properly
             //console.log(tracts);
             
         })
-    
-    //console.log(tracts);
 }
 
+function lineData(input,layerControl){
+    
+    fetch(input)
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(json){    
+            var lines = L.geoJson(json);
+            console.log(lines);
+            layerControl.addOverlay(lines,"Subway Lines");
+            
+            //calcStats();
+            //createChoropleth();
+            //createLegend();  
+        })
+}
+
+function stationData(input,layerControl){
+    
+    fetch(input)
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(json){    
+            var stations = L.geoJson(json);
+            console.log(stations);
+            layerControl.addOverlay(stations,"Subway Stations");
+            
+            //calcStats();
+            //createChoropleth();
+            //createLegend();  
+        })
+}
 
 
 document.addEventListener('DOMContentLoaded',createMap)
