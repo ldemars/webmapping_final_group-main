@@ -7,8 +7,8 @@ function createMap(){
     
     //create the map
     map = L.map('map', {
-        center: [0, 0],
-        zoom: 1
+        center: [40.7, -74.006],
+        zoom: 11
     });
     
     //add OSM base tilelayer
@@ -24,9 +24,9 @@ function createMap(){
     var layerControl = L.control.layers(baseLayer, overlays).addTo(map);
 
     //call getData function
-    tractData(filePath[0],layerControl);
-    lineData(filePath[1],layerControl);
-    stationData(filePath[2],layerControl);
+    tractData(filePath[0],layerControl,map);
+    lineData(filePath[1],layerControl,map);
+    stationData(filePath[2],layerControl,map);
 };
 
 function tractData(input,layerControl){
@@ -39,7 +39,7 @@ function tractData(input,layerControl){
             var tracts = L.geoJson(json);
             console.log(tracts);
             layerControl.addOverlay(tracts,"Tracts");
-            
+            //tracts.addTo(map);
             //calcStats();
             //createChoropleth();
             //createLegend();
@@ -60,14 +60,12 @@ function lineData(input,layerControl){
             var lines = L.geoJson(json);
             console.log(lines);
             layerControl.addOverlay(lines,"Subway Lines");
-            
-            //calcStats();
-            //createChoropleth();
+            lines.addTo(map);
             //createLegend();  
         })
 }
 
-function stationData(input,layerControl){
+function stationData(input,layerControl,map){
     
     fetch(input)
         .then(function(response){
@@ -75,12 +73,13 @@ function stationData(input,layerControl){
         })
         .then(function(json){    
             var stations = L.geoJson(json);
+            //calcStats();
+            //createPopupContent();
+            //createSymbols();
+            //createSequenceControl();
             console.log(stations);
             layerControl.addOverlay(stations,"Subway Stations");
-            
-            //calcStats();
-            //createChoropleth();
-            //createLegend();  
+            stations.addTo(map);
         })
 }
 
