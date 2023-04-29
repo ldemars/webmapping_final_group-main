@@ -12,43 +12,50 @@ function createMap(){
     });
     
     //add OSM base tilelayer
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    var baseLayer = {"Open Street Map": L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         minZoom: 3,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-    }).addTo(map);
+    })};
+
+    baseLayer["Open Street Map"].addTo(map);
+
+    var overlays 
+    var layerControl = L.control.layers(baseLayer, overlays).addTo(map);
 
     //call getData function
-    getData(map);
+    tractData(filePath[0],layerControl);
+    //lineData(filePath[1]);
+    //stationData(filePath[2]);
 };
 
-//function to retrieve the data and place it on the map
-function getData(map){
-
-    
-	
-        tractData(filePath[0]);
-        //lineData(filePath[1]);
-        //stationData(filePath[2]);
-    
-};
-
-function tractData(input){
+function tractData(input,layerControl){
     var tracts; 
     
     fetch(input)
         .then(function(response){
             return response.json();
         })
-        .then(function(response){
-            //check that data loaded properly
-            L.geoJson(response).addTo(map);
-            tracts = response; 
+        .then(function(json){
+            
+            L.geoJson(json).addTo(map);
+            //tracts = {"Tracts": response}; 
+            
+            var tracts = L.geoJson(json);
             console.log(tracts);
+            layerControl.addOverlay(tracts,"Tracts");
+            
+            //calcStats();
+            //createChoropleth();
+            //createSequenceControls();
+            //createLegend();
+
+            //check that data loaded properly
+            //console.log(tracts);
             
         })
     
-    console.log(tracts);
+    //console.log(tracts);
 }
 
 
