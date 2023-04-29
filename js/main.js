@@ -38,7 +38,7 @@ function tractData(input,layerControl){
         })
         .then(function(json){
             
-            L.geoJson(json).addTo(map);
+            //L.geoJson(json).addTo(map);
             //tracts = {"Tracts": response}; 
             
             var tracts = L.geoJson(json);
