@@ -5,28 +5,36 @@ var filePath = ["data/tracts_rank.geojson",
 
 //function to instantiate the Leaflet map
 function createMap(){
-    
     //create the map
     map = L.map('map', {
         center: [40.7, -74.006],
         zoom: 11,
-        minZoom: 9
-        
+        minZoom: 9,
+        zoomControl: false //initialize without default zoom control to allow for placement options later
     });
 
-    //add OSM base tilelayer
+    //Add zoom control with custom options
+    L.control.zoom({
+        position: 'bottomleft'
+    }).addTo(map);
+
+    //Create OSM base tilelayer and save to variable
     var baseLayer = {"Open Street Map": L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         minZoom: 3,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
     })};
 
+    //Add OSM base layer to map.
     baseLayer["Open Street Map"].addTo(map);
 
+    //Create overlay control, initialized with baseLayer and no overlays. 
     var overlays 
     var layerControl = L.control.layers(baseLayer, overlays).addTo(map);
 
-    //call getData function
+    
+
+    //call getData functions
     tractData(filePath[0],layerControl,map);
     lineData(filePath[1],layerControl,map);
     stationData(filePath[2],layerControl,map);
@@ -41,6 +49,7 @@ function tractData(input,layerControl){
         .then(function(json){        
             var tracts = L.geoJson(json);
             console.log(tracts);
+
             layerControl.addOverlay(tracts,"Tracts");
             //tracts.addTo(map);
             //calcStats();
@@ -61,6 +70,10 @@ function lineData(input,layerControl){
         })
         .then(function(json){    
             var lines = L.geoJson(json);
+
+            
+            lines.bindPopup("testing")
+
             console.log(lines);
             layerControl.addOverlay(lines,"Subway Lines");
             lines.addTo(map);
