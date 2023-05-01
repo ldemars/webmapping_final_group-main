@@ -72,7 +72,7 @@ function lineData(input,layerControl){
             var lines = L.geoJson(json);
 
             
-            lines.bindPopup("testing")
+            lines.bindPopup("testing");
 
             console.log(lines);
             layerControl.addOverlay(lines,"Subway Lines");
