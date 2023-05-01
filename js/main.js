@@ -50,14 +50,12 @@ function tractData(input,layerControl){
             var tracts = L.geoJson(json);
             console.log(tracts);
 
-            layerControl.addOverlay(tracts,"Tracts");
-            //tracts.addTo(map);
             //calcStats();
             //createChoropleth();
             //createLegend();
 
-            //check that data loaded properly
-            //console.log(tracts);
+            layerControl.addOverlay(tracts,"Tracts");
+            //tracts.addTo(map);
             
         })
 }
@@ -70,8 +68,8 @@ function lineData(input,layerControl){
         })
         .then(function(json){    
             var lines = L.geoJson(json);
-
-            
+            //createLineSymbols();
+            //createLinePopups(); //Insert options into command below?
             lines.bindPopup("testing");
 
             console.log(lines);
