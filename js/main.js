@@ -35,10 +35,31 @@ function createMap(){
     
 
     //call getData functions
+    createInfoControl(map);
     tractData(filePath[0],layerControl,map);
     lineData(filePath[1],layerControl,map);
     stationData(filePath[2],layerControl,map);
 };
+
+function createInfoControl(map){
+    var info = L.control();
+
+info.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+
+// method that we will use to update the control based on feature properties passed
+info.update = function (props) {
+    this._div.innerHTML = '<h4>US Population Density</h4>' +  (props ?
+        '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
+        : 'Hover over a feature');
+};
+
+info.addTo(map);
+
+}
 
 function tractData(input,layerControl){
     
@@ -54,7 +75,8 @@ function tractData(input,layerControl){
             return response.json();
         })
         .then(function(json){        
-            var tracts = L.geoJson(json,{style: tractStyle});
+            var tracts = L.geoJson(json,{style: tractStyle,
+                onEachFeature: onEachFeature});
             console.log(tracts);
 
             //calcStats();
@@ -65,6 +87,34 @@ function tractData(input,layerControl){
             //tracts.addTo(map);
             
         })
+}
+
+function onEachFeature(feature, layer) {
+    layer.on({
+        mouseover: highlightFeature,
+        mouseout: resetHighlight,
+        //click: zoomToFeature
+    });
+}
+
+function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        fillOpacity: 0.7
+    });
+
+    layer.bringToFront();
+}
+
+function resetHighlight(e) {
+    var layer = e.target;
+    
+    layer.setStyle({
+        weight: 2,
+        fillOpacity: 0.5
+    });
 }
 
 function lineData(input,layerControl){
