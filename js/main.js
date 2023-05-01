@@ -45,9 +45,9 @@ function tractData(input,layerControl){
     var tractStyle = {
         fillColor: 'blue',//getColor(feature.properties.density),
         weight: 2,
-        opacity: 1,
+        opacity: 0.9,
         color: 'white',
-        fillOpacity: 0.7}
+        fillOpacity: 0.5}
 
     fetch(input)
         .then(function(response){
