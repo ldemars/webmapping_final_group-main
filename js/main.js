@@ -42,12 +42,19 @@ function createMap(){
 
 function tractData(input,layerControl){
     
+    var tractStyle = {
+        fillColor: 'blue',//getColor(feature.properties.density),
+        weight: 2,
+        opacity: 1,
+        color: 'white',
+        fillOpacity: 0.7}
+
     fetch(input)
         .then(function(response){
             return response.json();
         })
         .then(function(json){        
-            var tracts = L.geoJson(json);
+            var tracts = L.geoJson(json,{style: tractStyle});
             console.log(tracts);
 
             //calcStats();
