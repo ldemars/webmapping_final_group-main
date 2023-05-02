@@ -63,34 +63,6 @@ function createInfoControl(){
     return info;
 }
 
-function tractData(input,layerControl){
-    
-    var tractStyle = {
-        fillColor: 'blue',//getColor(feature.properties.density),
-        weight: 2,
-        opacity: 0.9,
-        color: 'white',
-        fillOpacity: 0.5}
-
-    fetch(input)
-        .then(function(response){
-            return response.json();
-        })
-        .then(function(json){        
-            var tracts = L.geoJson(json,{style: tractStyle,
-                onEachFeature: onEachFeature});
-            console.log(tracts);
-
-            //calcStats();
-            //createChoropleth();
-            //createLegend();
-
-            layerControl.addOverlay(tracts,"Tracts");
-            //tracts.addTo(map);
-            
-        })
-}
-
 //Add event listeners for hover interaction and click  interaction (tracts only currently)
 function onEachFeature(feature, layer) {
     prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
@@ -161,7 +133,33 @@ function resetHighlightHover(e) {
     layer.closePopup(); //Closes popup when mouse goes off of polygon
 }
 
+function tractData(input,layerControl){
+    
+    var tractStyle = {
+        fillColor: 'blue',//getColor(feature.properties.density),
+        weight: 2,
+        opacity: 0.9,
+        color: 'white',
+        fillOpacity: 0.5}
 
+    fetch(input)
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(json){        
+            var tracts = L.geoJson(json,{style: tractStyle,
+                onEachFeature: onEachFeature});
+            console.log(tracts);
+
+            //calcStats();
+            //createChoropleth();
+            //createLegend();
+
+            layerControl.addOverlay(tracts,"Tracts");
+            tracts.addTo(map);
+            
+        })
+}
 
 function lineData(input,layerControl){
     
