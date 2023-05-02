@@ -133,6 +133,9 @@ function resetHighlightHover(e) {
     layer.closePopup(); //Closes popup when mouse goes off of polygon
 }
 
+//
+//Fetch functions
+//
 function tractData(input,layerControl){
     
     var tractStyle = {
