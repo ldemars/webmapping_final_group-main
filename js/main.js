@@ -175,10 +175,15 @@ function highlightFeatureHover(e) {
     layer.openPopup(); //Opens pop up while hovering over it.
     
     //Sets style when mouse is hovering over polygon
-    layer.setStyle({
-        weight: e.target.options.weight+4,
-        fillOpacity: e.target.options.fillOpacity+0.1
-    });
+
+    if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon"){
+        layer.setStyle({
+            weight: e.target.options.weight+4,
+            fillOpacity: e.target.options.fillOpacity+0.1}
+    )} else if (layer.feature.geometry.type == "Point"){
+        layer.setStyle({
+            fillOpacity: e.target.options.fillOpacity+0.1})
+    };
 
     //layer.bringToFront();
 }
@@ -188,11 +193,14 @@ function resetHighlightHover(e,geojson) {
 
     var layer = e.target;
     
-    layer.setStyle({ //Resets style to original
-        weight: e.target.options.weight-4,
-        //fillColor: 'blue',
-        fillOpacity: e.target.options.fillOpacity-0.1
-    });
+    if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon"){
+        layer.setStyle({
+            weight: e.target.options.weight-4,
+            fillOpacity: e.target.options.fillOpacity-0.1}
+    )} else if (layer.feature.geometry.type == "Point"){
+        layer.setStyle({
+            fillOpacity: e.target.options.fillOpacity-0.1})
+    };
 
 
     layer.closePopup(); //Closes popup when mouse goes off of polygon
@@ -356,10 +364,7 @@ function stationData(input,layerControl,map){
         .then(function(json){    
             var stations = new L.geoJson(json,{onEachFeature: onEachFeature,
                 pointToLayer: function(feature,latlng){
-                    return L.circleMarker(latlng,markerOptions);},
-                
-                
-                
+                    return L.circleMarker(latlng,markerOptions);},                         
             });
             //calcStats();
             //createPopupContent();
@@ -370,49 +375,5 @@ function stationData(input,layerControl,map){
             stations.addTo(map);
         })
 }
-
-function OnEachFeatureStation(feature, layer) {
-    prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
-    //Two separate mouse interactions included - hovering & clicking.
-   console.log(layer);
-    layer.on({
-        mouseover: highlightFeatureHoverStation,
-        mouseout: resetHighlightHoverStation,
-        click: highlightFeatureClick
-         
-    });
-}
-
-function highlightFeatureHoverStation(e) {
-    var layer = e.target;
-    //console.log(layer.feature.properties);
-    
-    
-    layer.bindPopup(e.target.feature.properties.name,{className: 'mouseoverpopupStation'}) //Adds hover pop up to layer object - assign class name for css
-    layer.openPopup(); //Opens pop up while hovering over it.
-    
-    //Sets style when mouse is hovering over polygon
-    layer.setStyle({
-        fillColor:'red',
-    });
-
-    //layer.bringToFront();
-}
-
-function resetHighlightHoverStation(e,layer) {
-    //json.resetStyle(e.target);
-
-    var layer = e.target;
-    
-    layer.setStyle({ //Resets style to original
-        weight: 5,
-        //fillColor: 'blue',
-        opacity: 0.75
-    });
-
-
-    layer.closePopup(); //Closes popup when mouse goes off of polygon
-}
-
 
 document.addEventListener('DOMContentLoaded',createMap)
