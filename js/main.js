@@ -138,7 +138,7 @@ function highlightFeatureClick(e) {
         info.updateLine(layer.feature.properties);
         prevType = "Line";
         //console.log(prevType);
-        prevColor = e.target.options.color;
+        prevColor = layer.options.color;
         layer.setStyle({ //Sets selection color when a polygon is clicked
             color: 'red'
         });
@@ -146,7 +146,7 @@ function highlightFeatureClick(e) {
         info.updateTract(layer.feature.properties);
         prevType = "Polygon";
         //console.log(prevType);
-        prevColor = e.target.options.fillColor;
+        prevColor = layer.options.fillColor;
         layer.setStyle({ //Sets selection color when a polygon is clicked
         fillColor: 'red'
         
@@ -155,7 +155,7 @@ function highlightFeatureClick(e) {
         info.updateStation(layer.feature.properties);
         prevType = "Point";
         //console.log(prevType);
-        prevColor = e.target.options.fillColor;
+        prevColor = layer.options.fillColor;
         layer.setStyle({ //Sets selection color when a polygon is clicked
         fillColor: 'red'
         
@@ -168,20 +168,20 @@ function highlightFeatureClick(e) {
 function highlightFeatureHover(e) {
     var layer = e.target;
 
-    var key1 = Object.keys(e.target.feature.properties)[0]
+    var key1 = Object.keys(layer.feature.properties)[0]
 
-    layer.bindPopup(e.target.feature.properties[key1],{className: 'mouseoverpopup'}) //Adds hover pop up to layer object - assign class name for css
+    layer.bindPopup(layer.feature.properties[key1],{className: 'mouseoverpopup'}) //Adds hover pop up to layer object - assign class name for css
     layer.openPopup(); //Opens pop up while hovering over it.
     
     //Sets style when mouse is hovering over polygon
 
     if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
         layer.setStyle({
-            weight: e.target.options.weight+4,
-            fillOpacity: e.target.options.fillOpacity+0.1}
+            weight: layer.options.weight+4,
+            fillOpacity: layer.options.fillOpacity+0.1}
     )} else if (layer.feature.geometry.type == "Point"){
         layer.setStyle({
-            fillOpacity: e.target.options.fillOpacity+0.1})
+            fillOpacity: layer.options.fillOpacity+0.1})
     };
 
     //layer.bringToFront();
@@ -194,11 +194,11 @@ function resetHighlightHover(e,geojson) {
     
     if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
         layer.setStyle({
-            weight: e.target.options.weight-4,
-            fillOpacity: e.target.options.fillOpacity-0.1}
+            weight: layer.options.weight-4,
+            fillOpacity: layer.options.fillOpacity-0.1}
     )} else if (layer.feature.geometry.type == "Point"){
         layer.setStyle({
-            fillOpacity: e.target.options.fillOpacity-0.1})
+            fillOpacity: layer.options.fillOpacity-0.1})
     };
 
 
