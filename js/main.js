@@ -79,7 +79,7 @@ function createInfoControl(){
     info.updateStation = function (props) {
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
-            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line
+            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+"Data: "+props.WD_2015+""
             : '');
     };
 
