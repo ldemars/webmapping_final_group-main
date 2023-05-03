@@ -18,10 +18,12 @@ function createMap(){
         position: 'bottomleft'
     }).addTo(map);
 
+    //Create separate map panes for each geojson layer.
     map.createPane('Tracts');
     map.createPane('Lines');
     map.createPane('Stations');
 
+    //Set zIndex to order the layers regardless of overlay order.
     map.getPane('Tracts').style.zIndex = 450;
     map.getPane('Lines').style.zIndex = 460;
     map.getPane('Stations').style.zIndex = 470;
@@ -57,9 +59,9 @@ function createInfoControl(){
     
     info = L.control(); //Custom controller is generated as a GLOBAL variable.
 
-    info.onAdd = function (map) {
+    info.onAdd = function (map) { //Initializes info controller.
         this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info" for css
-        this.updateTract();
+        this.updateTract(); //Initializes with updateTract for "Click to select feature" text
         return this._div;
     };
 
@@ -70,6 +72,8 @@ function createInfoControl(){
             '<b>Census Tract ID: ' + props.BoroCT2020 + '</b><br />Accessibility Rank: '+props.Sub_RankMi + ''
             : '');
     };
+
+
     info.updateLine = function (props) {
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
@@ -83,7 +87,7 @@ function createInfoControl(){
             : '');
     };
 
-    info.addTo(map); 
+    info.addTo(map); //Adds initialized info controller to map: Or updates map after each methods.
     return info;
 }
 
@@ -253,7 +257,7 @@ function lineStyleColor(d) {
             d == "7" ? "#b933ad" :
 
             d == "T" ? "#00add0" :
-            
+
             d == "S" ? "#808183" :
                         "#000000" ;
 }
