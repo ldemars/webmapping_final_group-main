@@ -18,6 +18,13 @@ function createMap(){
         position: 'bottomleft'
     }).addTo(map);
 
+    map.createPane('Tracts');
+    map.createPane('Lines');
+
+    map.getPane('Tracts').style.zIndex = 450;
+    map.getPane('Lines').style.zIndex = 460;
+
+
     //Create OSM base tilelayer and save to variable
     var baseLayer = {"Open Street Map": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -31,15 +38,18 @@ function createMap(){
 
     //Create overlay control, initialized with baseLayer and no overlays. 
     var overlays 
-    var layerControl = L.control.layers(baseLayer, overlays).addTo(map);
+    var layerControl = L.control.layers(baseLayer, overlays,{sortLayers: true}).addTo(map);
 
     //Initializes info controller. No data added until later when user clicks on feature.
     createInfoControl(map);
 
     //call data functions - adds each to map. Three separate functions required as we need to perform different tasks for each(?).
-    tractData(filePath[0],layerControl,map);//Pass in filePath array value, overlay controller, and map variables.
+
     lineData(filePath[1],layerControl,map);
+    tractData(filePath[0],layerControl,map);//Pass in filePath array value, overlay controller, and map variables.
     stationData(filePath[2],layerControl,map);
+    
+   
 };
 
 function createInfoControl(){
@@ -85,7 +95,7 @@ function highlightFeatureClick(e) {
         // Reset style  
         prevLayerClicked.setStyle({
             weight: 2,
-            fillColor: 'blue',
+            fillColor: '#A0CBCA',
             fillOpacity: 0.5
         });
     }
@@ -120,25 +130,24 @@ function highlightFeatureHover(e) {
         fillOpacity: 0.7
     });
 
-    layer.bringToFront();
+    //layer.bringToFront();
 }
 
 
-function resetHighlightHover(e) {
+function resetHighlightHover(e,layer) {
+    //geojson.resetStyle(e.target);
+
     var layer = e.target;
     
     layer.setStyle({ //Resets style to original
-        weight: 2,
+        weight: 0.75,
         //fillColor: 'blue',
         fillOpacity: 0.5
     });
+
+
     layer.closePopup(); //Closes popup when mouse goes off of polygon
 }
-
-
-//
-//Fetch functions
-//
 
 function lineStyleColor(d) {
     //console.log(d);
@@ -192,13 +201,60 @@ function lineStyleColor(d) {
                         "#000000" ;
 }
 
+function onEachFeatureLine(feature, layer) {
+    prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
+    //Two separate mouse interactions included - hovering & clicking.
+    layer.on({
+        mouseover: highlightFeatureHoverLine,
+        mouseout: resetHighlightHoverLine,
+        click: highlightFeatureClick
+         
+    });
+}
+
+function highlightFeatureHoverLine(e) {
+    var layer = e.target;
+    //console.log(layer.feature.properties);
+    
+    
+    layer.bindPopup(e.target.feature.properties.name,{className: 'mouseoverpopupLine'}) //Adds hover pop up to layer object - assign class name for css
+    layer.openPopup(); //Opens pop up while hovering over it.
+    
+    //Sets style when mouse is hovering over polygon
+    layer.setStyle({
+        weight: 7,
+        opacity: 1
+    });
+
+    //layer.bringToFront();
+}
+
+function resetHighlightHoverLine(e,layer) {
+    //geojson.resetStyle(e.target);
+
+    var layer = e.target;
+    
+    layer.setStyle({ //Resets style to original
+        weight: 5,
+        //fillColor: 'blue',
+        opacity: 0.75
+    });
+
+
+    layer.closePopup(); //Closes popup when mouse goes off of polygon
+}
+
+
 function lineStyle(feature){
     return {
         color: lineStyleColor(feature.properties.name),
         weight: 5,
-        opacity: 0.75
+        opacity: 0.75,
+        className: 'SbLine'
     }
 }
+
+
 function lineData(input,layerControl){
     
     fetch(input)
@@ -207,45 +263,67 @@ function lineData(input,layerControl){
         })
         .then(function(json){    
             
-            var lines = L.geoJson(json,{style: lineStyle});
+            var lines = L.geoJson(json,{
+                style: lineStyle,
+                renderer: L.svg({pane: 'Lines'}),
+                pane:{pane: 'Lines'},
+                onEachFeature: onEachFeatureLine});
             //createLineSymbols();
             //createLinePopups(); //Insert options into command below?
-            lines.bindPopup("testing");
 
             console.log(lines);
+            
+
             layerControl.addOverlay(lines,"Subway Lines");
-            lines.bringToFront();
+            
+
             lines.addTo(map);
+            
             
             //createLegend();  
         })
 }
 
-function tractData(input,layerControl){
-    
-    var tractStyle = {
-        fillColor: 'blue',//getColor(feature.properties.density),
-        weight: 2,
+function tractStyle(feature){
+    return {
+        fillColor: '#A0CBCA',//getColor(feature.properties.density),
+        weight: 0.75,
         opacity: 0.9,
         color: 'white',
-        fillOpacity: 0.5}
+        fillOpacity: 0.5,
+        className: 'tractPoly'
+        
+    }
+}
+
+//
+//Fetch functions
+//
+
+
+function tractData(input,layerControl){
 
     fetch(input)
         .then(function(response){
             return response.json();
         })
         .then(function(json){        
-            var tracts = L.geoJson(json,{style: tractStyle,
+            var tracts = L.geoJson(json,{
+                style: tractStyle,
+                renderer: L.svg({pane: 'Tracts'}),
+                pane:{pane: 'Tracts'},
                 onEachFeature: onEachFeatureTract});
             console.log(tracts);
-
+            
+            
+            //tracts.style.zIndex=400 
             //calcStats();
             //createChoropleth();
             //createLegend();
-
+         
             layerControl.addOverlay(tracts,"Tracts");
-            tracts.bringToBack();
-            //tracts.addTo(map);
+            
+            tracts.addTo(map);
             
         })
 }
