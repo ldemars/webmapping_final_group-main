@@ -38,3 +38,33 @@
     margin: 0 0 5px;
     color: #777;
 }
+
+#panel {
+    width: 25%;
+    padding: 20px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    line-height: 42px;
+}
+
+.range-slider {
+    width: 55%;
+}
+
+.step {
+	width: 20%;
+}
+
+.step img {
+	width: 100%;
+}
+
+
+#forward {
+    float: right;
+}
+
+#reverse {
+    float: left;
+}
