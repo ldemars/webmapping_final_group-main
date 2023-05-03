@@ -63,7 +63,7 @@ function createInfoControl(){
         return this._div;
     };
 
-    // method that is called to update the control based on feature properties passed
+    // methods that will be called to update the control based on feature properties passed
     info.updateTract = function (props) {
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
@@ -234,52 +234,26 @@ function tractStyle(feature){
 function lineStyleColor(d) {
     //console.log(d);
 
-    return  d == "A" ? "#0039a6" : 
-            d == "A-C" ? "#0039a6" :
-            d == "C" ? "#0039a6" :
-            d == "A-C-E" ? "#0039a6" :
-            d == "E" ? "#0039a6" :
-            d == "B" ? "#ff6319" :
-            d == "B-D" ? "#ff6319" :
-            d == "B-D-F-M" ? "#ff6319" :
-            d == "D" ? "#ff6319" :
-            d == "F" ? "#ff6319" :
-            d == "F-M" ? "#ff6319" :
-            d == "M" ? "#ff6319" :
+    return  d == "A" || d == "A-C" || d == "C" || d == "A-C-E" || d == "E" ? "#0039a6" : 
 
+            d == "B" || d == "B-D" || d == "B-D-F-M" || d == "D" || d == "F" || d == "F-M" || d == "M" ? "#ff6319" :
 
             d == "G" ? "#6cbe45" : 
 
             d == "L" ? "#a7a9ac" :
 
-            d == "J" ? "#996633" :
-            d == "J-Z" ? "#996633" :
+            d == "J" || d == "J-Z"? "#996633" :
 
-            d == "N-Q-R-W" ? "#fccc0a" :
-            d == "N" ? "#fccc0a" :
-            d == "N-Q" ? "#fccc0a" :
-            d == "N-Q-R" ? "#fccc0a" :
-            d == "N-R" ? "#fccc0a" :
-            d == "N-R-W" ? "#fccc0a" :
-            d == "N-W" ? "#fccc0a" :
-            d == "Q" ? "#fccc0a" :
-            d == "R" ? "#fccc0a" :
-
-            d == "1-2-3" ? "#ee352e" :
-            d == "1" ? "#ee352e" :
-            d == "2" ? "#ee352e" :
-            d == "2-3" ? "#ee352e" :
-            d == "3" ? "#ee352e" :
-
-            d == "4-5-6" ? "#00933c" :
-            d == "4" ? "#00933c" :
-            d == "4-5" ? "#00933c" :
-            d == "5" ? "#00933c" :
-            d == "6" ? "#00933c" :
+            d == "N-Q-R-W" || d == "N" || d == "N-Q" || d == "N-Q-R" || d == "N-R" || d == "N-R-W" || d == "N-W" || d == "Q" || d == "R" ? "#fccc0a" :
+    
+            d == "1-2-3" || d == "1" || d == "2" || d == "2-3" || d == "3" ? "#ee352e" :
+   
+            d == "4-5-6" || d == "4" || d == "4-5" || d == "5" || d == "6" ? "#00933c" :
 
             d == "7" ? "#b933ad" :
 
             d == "T" ? "#00add0" :
+            
             d == "S" ? "#808183" :
                         "#000000" ;
 }
