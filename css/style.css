@@ -15,6 +15,16 @@
 
 }
 
+.mouseoverpopupLine {
+    position:absolute;
+    top: 55px;
+    right: 50px;
+    box-shadow: none; 
+    font-weight: bold;
+    background-attachment: #f4913b;
+
+}
+
 .info {
     float:bottom;
     padding: 6px 8px;

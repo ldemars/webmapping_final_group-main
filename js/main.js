@@ -20,10 +20,11 @@ function createMap(){
 
     map.createPane('Tracts');
     map.createPane('Lines');
+    map.createPane('Stations');
 
     map.getPane('Tracts').style.zIndex = 450;
     map.getPane('Lines').style.zIndex = 460;
-
+    map.getPane('Stations').style.zIndex = 470;
 
     //Create OSM base tilelayer and save to variable
     var baseLayer = {"Open Street Map": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -154,51 +155,6 @@ function resetHighlightHover(e,geojson) {
     layer.closePopup(); //Closes popup when mouse goes off of polygon
 }
 
-
-
-function onEachFeatureLine(feature, layer) {
-    prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
-    //Two separate mouse interactions included - hovering & clicking.
-    layer.on({
-        mouseover: highlightFeatureHoverLine,
-        mouseout: resetHighlightHoverLine,
-        click: highlightFeatureClick
-         
-    });
-}
-
-function highlightFeatureHoverLine(e) {
-    var layer = e.target;
-    //console.log(layer.feature.properties);
-    
-    
-    layer.bindPopup(e.target.feature.properties.name,{className: 'mouseoverpopupLine'}) //Adds hover pop up to layer object - assign class name for css
-    layer.openPopup(); //Opens pop up while hovering over it.
-    
-    //Sets style when mouse is hovering over polygon
-    layer.setStyle({
-        weight: 7,
-        opacity: 1
-    });
-
-    //layer.bringToFront();
-}
-
-function resetHighlightHoverLine(e,layer) {
-    //json.resetStyle(e.target);
-
-    var layer = e.target;
-    
-    layer.setStyle({ //Resets style to original
-        weight: 5,
-        //fillColor: 'blue',
-        opacity: 0.75
-    });
-
-
-    layer.closePopup(); //Closes popup when mouse goes off of polygon
-}
-
 ///
 //Style functions
 ///
@@ -305,6 +261,7 @@ function lineData(input,layerControl){
                     layer.on('mouseout', function () {
                         
                         lines.resetStyle(this); //mouseout performed in L.geoJson command to allow for resetStyle to be used.
+                        this.closePopup();
                     });
                     layer.on('click', function () {
                         //Checks if a pre-existing selection exists. If so it resets the styling.
@@ -360,13 +317,28 @@ function tractData(input,layerControl){
 }
 
 function stationData(input,layerControl,map){
-    
+    var markerOptions = {
+        radius: 5,
+        fillColor:'white',
+        color:'black',
+        weight:4,
+        opacity:1,
+        fillOpacity:0.8,
+        renderer: L.svg({pane: 'Stations'}),
+        pane:{pane: 'Stations'}
+    }
     fetch(input)
         .then(function(response){
             return response.json();
         })
         .then(function(json){    
-            var stations = L.geoJson(json);
+            var stations = new L.geoJson(json,{OnEachFeature: OnEachFeature,
+                pointToLayer: function(feature,latlng){
+                    return L.circleMarker(latlng,markerOptions);},
+                
+                
+                
+            });
             //calcStats();
             //createPopupContent();
             //createSymbols();
@@ -375,6 +347,48 @@ function stationData(input,layerControl,map){
             layerControl.addOverlay(stations,"Subway Stations");
             stations.addTo(map);
         })
+}
+
+function OnEachFeature(feature, layer) {
+    prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
+    //Two separate mouse interactions included - hovering & clicking.
+    layer.on({
+        mouseover: highlightFeatureHoverStation,
+        mouseout: resetHighlightHoverStation,
+        click: highlightFeatureClick
+         
+    });
+}
+
+function highlightFeatureHoverStation(e) {
+    var layer = e.target;
+    //console.log(layer.feature.properties);
+    
+    
+    layer.bindPopup(e.target.feature.properties.name,{className: 'mouseoverpopupStation'}) //Adds hover pop up to layer object - assign class name for css
+    layer.openPopup(); //Opens pop up while hovering over it.
+    
+    //Sets style when mouse is hovering over polygon
+    layer.setStyle({
+        fillColor:'red',
+    });
+
+    //layer.bringToFront();
+}
+
+function resetHighlightHoverStation(e,layer) {
+    //json.resetStyle(e.target);
+
+    var layer = e.target;
+    
+    layer.setStyle({ //Resets style to original
+        weight: 5,
+        //fillColor: 'blue',
+        opacity: 0.75
+    });
+
+
+    layer.closePopup(); //Closes popup when mouse goes off of polygon
 }
 
 
