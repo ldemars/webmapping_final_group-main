@@ -76,6 +76,12 @@ function createInfoControl(){
             '<b>Subway Line: ' + props.name + '</b><br />'
             : '');
     };
+    info.updateStation = function (props) {
+        this._div.innerHTML = 
+            '<h4>Click to select feature</h4>' +  (props ?
+            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line
+            : '');
+    };
 
     info.addTo(map); 
     return info;
@@ -106,16 +112,20 @@ function highlightFeatureClick(e) {
         if (prevType == "Polygon"){
         prevLayerClicked.setStyle({
             fillColor: prevFillColor //'#A0CBCA',
-        })} else {
+        })} else if (prevType == "Line"){
         prevLayerClicked.setStyle({
             color: prevColor //'#A0CBCA',
         })
-        };
+        }   else if (prevType == "Point"){
+            prevLayerClicked.setStyle({
+                fillColor: prevFillColor //'#A0CBCA',
+            })
+            };
     }
 
     var layer = e.target;
     
-    //console.log(layer);
+    console.log(layer);
     //console.log(layer.feature.properties);
     //console.log(e.target.options);
 
@@ -125,7 +135,7 @@ function highlightFeatureClick(e) {
     //Runs info.update function. (info is a global variable, required for this to work)
 
     //Checks for type of layer (Polyline vs Polygon) - stores whichever color value is needed.
-    if (e.target.options.fillColor == null){
+    if (layer.feature.geometry.type == "LineString"){
         info.updateLine(layer.feature.properties);
         prevType = "Line";
         //console.log(prevType);
@@ -133,7 +143,7 @@ function highlightFeatureClick(e) {
         layer.setStyle({ //Sets selection color when a polygon is clicked
             color: 'red'
         });
-    } else {
+    }   else if(layer.feature.geometry.type == "Polygon") {
         info.updateTract(layer.feature.properties);
         prevType = "Polygon";
         //console.log(prevType);
@@ -141,7 +151,17 @@ function highlightFeatureClick(e) {
         layer.setStyle({ //Sets selection color when a polygon is clicked
         fillColor: 'red'
         
-    })};
+    })}
+        else if(layer.feature.geometry.type == "Point") {
+        info.updateStation(layer.feature.properties);
+        prevType = "Point";
+        //console.log(prevType);
+        prevFillColor = e.target.options.fillColor;
+        layer.setStyle({ //Sets selection color when a polygon is clicked
+        fillColor: 'red'
+        
+    })}
+    ;
 
     prevLayerClicked = layer; //Stores clicked layer to be checked later. Basically makes this function a loop if you are repeatedly clicking features.
 }
@@ -334,7 +354,7 @@ function stationData(input,layerControl,map){
             return response.json();
         })
         .then(function(json){    
-            var stations = new L.geoJson(json,{OnEachFeature: OnEachFeatureStation,
+            var stations = new L.geoJson(json,{onEachFeature: onEachFeature,
                 pointToLayer: function(feature,latlng){
                     return L.circleMarker(latlng,markerOptions);},
                 
