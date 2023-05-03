@@ -58,15 +58,21 @@ function createInfoControl(){
 
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info" for css
-        this.update();
+        this.updateTract();
         return this._div;
     };
 
     // method that is called to update the control based on feature properties passed
-    info.update = function (props) {
+    info.updateTract = function (props) {
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
-            '<b>Census Tract ID: ' + props.BoroCT2020 + '</b><br />Accessibility Rank: '+props.Sub_RankMi + ' '
+            '<b>Census Tract ID: ' + props.BoroCT2020 + '</b><br />Accessibility Rank: '+props.Sub_RankMi + ''
+            : '');
+    };
+    info.updateLine = function (props) {
+        this._div.innerHTML = 
+            '<h4>Click to select feature</h4>' +  (props ?
+            '<b>Subway Line: ' + props.name + '</b><br />'
             : '');
     };
 
@@ -104,7 +110,7 @@ function highlightFeatureClick(e) {
     var layer = e.target;
     console.log(layer.feature.properties);
 
-    info.update(layer.feature.properties)//Runs info.update function. (info is a global variable, required for this to work)
+    info.updateTract(layer.feature.properties)//Runs info.update function. (info is a global variable, required for this to work)
 
     layer.setStyle({ //Sets selection color when a polygon is clicked
         weight: 5,
@@ -134,8 +140,7 @@ function highlightFeatureHover(e) {
 }
 
 
-function resetHighlightHover(e,layer) {
-    //geojson.resetStyle(e.target);
+function resetHighlightHover(e,geojson) {
 
     var layer = e.target;
     
@@ -147,6 +152,76 @@ function resetHighlightHover(e,layer) {
 
 
     layer.closePopup(); //Closes popup when mouse goes off of polygon
+}
+
+
+
+function onEachFeatureLine(feature, layer) {
+    prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
+    //Two separate mouse interactions included - hovering & clicking.
+    layer.on({
+        mouseover: highlightFeatureHoverLine,
+        mouseout: resetHighlightHoverLine,
+        click: highlightFeatureClick
+         
+    });
+}
+
+function highlightFeatureHoverLine(e) {
+    var layer = e.target;
+    //console.log(layer.feature.properties);
+    
+    
+    layer.bindPopup(e.target.feature.properties.name,{className: 'mouseoverpopupLine'}) //Adds hover pop up to layer object - assign class name for css
+    layer.openPopup(); //Opens pop up while hovering over it.
+    
+    //Sets style when mouse is hovering over polygon
+    layer.setStyle({
+        weight: 7,
+        opacity: 1
+    });
+
+    //layer.bringToFront();
+}
+
+function resetHighlightHoverLine(e,layer) {
+    //json.resetStyle(e.target);
+
+    var layer = e.target;
+    
+    layer.setStyle({ //Resets style to original
+        weight: 5,
+        //fillColor: 'blue',
+        opacity: 0.75
+    });
+
+
+    layer.closePopup(); //Closes popup when mouse goes off of polygon
+}
+
+///
+//Style functions
+///
+
+function lineStyle(feature){
+    return {
+        color: lineStyleColor(feature.properties.name),
+        weight: 5,
+        opacity: 0.75,
+        className: 'SbLine'
+    }
+}
+
+function tractStyle(feature){
+    return {
+        fillColor: '#A0CBCA',//getColor(feature.properties.density),
+        weight: 0.75,
+        opacity: 0.9,
+        color: 'white',
+        fillOpacity: 0.5,
+        className: 'tractPoly'
+        
+    }
 }
 
 function lineStyleColor(d) {
@@ -201,59 +276,9 @@ function lineStyleColor(d) {
                         "#000000" ;
 }
 
-function onEachFeatureLine(feature, layer) {
-    prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
-    //Two separate mouse interactions included - hovering & clicking.
-    layer.on({
-        mouseover: highlightFeatureHoverLine,
-        mouseout: resetHighlightHoverLine,
-        click: highlightFeatureClick
-         
-    });
-}
-
-function highlightFeatureHoverLine(e) {
-    var layer = e.target;
-    //console.log(layer.feature.properties);
-    
-    
-    layer.bindPopup(e.target.feature.properties.name,{className: 'mouseoverpopupLine'}) //Adds hover pop up to layer object - assign class name for css
-    layer.openPopup(); //Opens pop up while hovering over it.
-    
-    //Sets style when mouse is hovering over polygon
-    layer.setStyle({
-        weight: 7,
-        opacity: 1
-    });
-
-    //layer.bringToFront();
-}
-
-function resetHighlightHoverLine(e,layer) {
-    //geojson.resetStyle(e.target);
-
-    var layer = e.target;
-    
-    layer.setStyle({ //Resets style to original
-        weight: 5,
-        //fillColor: 'blue',
-        opacity: 0.75
-    });
-
-
-    layer.closePopup(); //Closes popup when mouse goes off of polygon
-}
-
-
-function lineStyle(feature){
-    return {
-        color: lineStyleColor(feature.properties.name),
-        weight: 5,
-        opacity: 0.75,
-        className: 'SbLine'
-    }
-}
-
+//
+//Fetch functions
+//
 
 function lineData(input,layerControl){
     
@@ -267,7 +292,29 @@ function lineData(input,layerControl){
                 style: lineStyle,
                 renderer: L.svg({pane: 'Lines'}),
                 pane:{pane: 'Lines'},
-                onEachFeature: onEachFeatureLine});
+                onEachFeature: function (feature, layer) {
+                    layer.on('mouseover', function () {
+                        this.bindPopup(this.feature.properties.name,{className: 'mouseoverpopupLine'}) //Adds hover pop up to layer object - assign class name for css
+                        this.openPopup(); //Opens pop up while hovering over it.
+                        this.setStyle({
+                            weight: 8,
+                            opacity: 1
+                        });
+
+                    });
+                    layer.on('mouseout', function () {
+                        
+                        lines.resetStyle(this); //mouseout performed in L.geoJson command to allow for resetStyle to be used.
+                    });
+                    layer.on('click', function () {
+                        //Checks if a pre-existing selection exists. If so it resets the styling.
+
+                        //var layer = e.target;
+                        console.log(this.feature.properties);
+
+                        info.updateLine(this.feature.properties)//Runs info.update function. (info is a global variable, required for this to work)
+                    });
+                }});
             //createLineSymbols();
             //createLinePopups(); //Insert options into command below?
 
@@ -284,35 +331,19 @@ function lineData(input,layerControl){
         })
 }
 
-function tractStyle(feature){
-    return {
-        fillColor: '#A0CBCA',//getColor(feature.properties.density),
-        weight: 0.75,
-        opacity: 0.9,
-        color: 'white',
-        fillOpacity: 0.5,
-        className: 'tractPoly'
-        
-    }
-}
-
-//
-//Fetch functions
-//
-
-
 function tractData(input,layerControl){
-
+    prevLayerClicked = null;
     fetch(input)
         .then(function(response){
             return response.json();
         })
         .then(function(json){        
-            var tracts = L.geoJson(json,{
+            var tracts = new L.geoJson(json,{
                 style: tractStyle,
                 renderer: L.svg({pane: 'Tracts'}),
                 pane:{pane: 'Tracts'},
                 onEachFeature: onEachFeatureTract});
+
             console.log(tracts);
             
             
