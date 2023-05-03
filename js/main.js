@@ -64,8 +64,9 @@ function createInfoControl(){
     return info;
 }
 
+
 //Add event listeners for hover interaction and click  interaction (tracts only currently)
-function onEachFeature(feature, layer) {
+function onEachFeatureTract(feature, layer) {
     prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
     //Two separate mouse interactions included - hovering & clicking.
     layer.on({
@@ -134,6 +135,7 @@ function resetHighlightHover(e) {
     layer.closePopup(); //Closes popup when mouse goes off of polygon
 }
 
+
 //
 //Fetch functions
 //
@@ -152,7 +154,7 @@ function tractData(input,layerControl){
         })
         .then(function(json){        
             var tracts = L.geoJson(json,{style: tractStyle,
-                onEachFeature: onEachFeature});
+                onEachFeature: onEachFeatureTract});
             console.log(tracts);
 
             //calcStats();
@@ -160,11 +162,70 @@ function tractData(input,layerControl){
             //createLegend();
 
             layerControl.addOverlay(tracts,"Tracts");
-            tracts.addTo(map);
+            //tracts.addTo(map);
             
         })
 }
 
+function lineStyleColor(d) {
+    console.log(d);
+
+    return  d == "A" ? "#0039a6" : 
+            d == "A-C" ? "#0039a6" :
+            d == "C" ? "#0039a6" :
+            d == "A-C-E" ? "#0039a6" :
+            d == "E" ? "#0039a6" :
+            d == "B" ? "#ff6319" :
+            d == "B-D" ? "#ff6319" :
+            d == "B-D-F-M" ? "#ff6319" :
+            d == "D" ? "#ff6319" :
+            d == "F" ? "#ff6319" :
+            d == "F-M" ? "#ff6319" :
+            d == "M" ? "#ff6319" :
+
+
+            d == "G" ? "#6cbe45" : 
+
+            d == "L" ? "#a7a9ac" :
+
+            d == "J" ? "#996633" :
+            d == "J-Z" ? "#996633" :
+
+            d == "N-Q-R-W" ? "#fccc0a" :
+            d == "N" ? "#fccc0a" :
+            d == "N-Q" ? "#fccc0a" :
+            d == "N-Q-R" ? "#fccc0a" :
+            d == "N-R" ? "#fccc0a" :
+            d == "N-R-W" ? "#fccc0a" :
+            d == "N-W" ? "#fccc0a" :
+            d == "Q" ? "#fccc0a" :
+            d == "R" ? "#fccc0a" :
+
+            d == "1-2-3" ? "#ee352e" :
+            d == "1" ? "#ee352e" :
+            d == "2" ? "#ee352e" :
+            d == "2-3" ? "#ee352e" :
+
+            d == "4-5-6" ? "#00933c" :
+            d == "4" ? "#00933c" :
+            d == "4-5" ? "#00933c" :
+            d == "5" ? "#00933c" :
+            d == "6" ? "#00933c" :
+
+            d == "7" ? "#b933ad" :
+
+            d == "T" ? "#00add0" :
+            d == "S" ? "#808183" :
+                        "#000000" ;
+}
+
+function lineStyle(feature){
+    return {
+        color: lineStyleColor(feature.properties.name),
+        weight: 2,
+        opacity: 0.75
+    }
+}
 function lineData(input,layerControl){
     
     fetch(input)
@@ -172,7 +233,8 @@ function lineData(input,layerControl){
             return response.json();
         })
         .then(function(json){    
-            var lines = L.geoJson(json);
+            
+            var lines = L.geoJson(json,{style: lineStyle});
             //createLineSymbols();
             //createLinePopups(); //Insert options into command below?
             lines.bindPopup("testing");
