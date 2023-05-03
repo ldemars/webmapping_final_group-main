@@ -170,20 +170,24 @@ function highlightFeatureHover(e) {
 
     var key1 = Object.keys(layer.feature.properties)[0]
 
-    layer.bindPopup(layer.feature.properties[key1],{className: 'mouseoverpopup'}) //Adds hover pop up to layer object - assign class name for css
-    layer.openPopup(); //Opens pop up while hovering over it.
+    
+    //Opens pop up while hovering over it.
     
     //Sets style when mouse is hovering over polygon
 
     if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
+        var key1 = Object.keys(layer.feature.properties)[0]
         layer.setStyle({
             weight: layer.options.weight+4,
             fillOpacity: layer.options.fillOpacity+0.1}
     )} else if (layer.feature.geometry.type == "Point"){
+        var key1 = Object.keys(layer.feature.properties)[1]
         layer.setStyle({
             fillOpacity: layer.options.fillOpacity+0.1})
     };
 
+    layer.bindPopup(layer.feature.properties[key1],{className: 'mouseoverpopup'}) //Adds hover pop up to layer object - assign class name for css
+    layer.openPopup(); 
     //layer.bringToFront();
 }
 
