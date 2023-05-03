@@ -167,18 +167,18 @@ function highlightFeatureClick(e) {
 
 function highlightFeatureHover(e) {
     var layer = e.target;
-
+    var key1
     //Opens pop up while hovering over it.
     
     //Sets style when mouse is hovering over polygon
 
     if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
-        var key1 = Object.keys(layer.feature.properties)[0]
+        key1 = Object.keys(layer.feature.properties)[0]
         layer.setStyle({
             weight: layer.options.weight+4,
             fillOpacity: layer.options.fillOpacity+0.1}
     )} else if (layer.feature.geometry.type == "Point"){
-        var key1 = Object.keys(layer.feature.properties)[1]
+        key1 = Object.keys(layer.feature.properties)[1]
         layer.setStyle({
             fillOpacity: layer.options.fillOpacity+0.1})
     };
