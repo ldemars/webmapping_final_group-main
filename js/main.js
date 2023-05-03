@@ -92,7 +92,6 @@ function createInfoControl(){
 function onEachFeature(feature, layer) {
     prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
     prevColor = null;
-    prevFillColor = null;
     
     //Two separate mouse interactions included - hovering & clicking.
     layer.on({
@@ -109,16 +108,16 @@ function highlightFeatureClick(e) {
     //Checks if a pre-existing selection exists. If so it resets the styling.
     if (prevLayerClicked !== null) {
         // Reset style  
-        if (prevType == "Polygon"){
+        if (prevType == "Polygon" || prevType == "MultiPolygon"){
         prevLayerClicked.setStyle({
-            fillColor: prevFillColor //'#A0CBCA'
+            fillColor: prevColor //'#A0CBCA'
         })} else if (prevType == "Line"){
         prevLayerClicked.setStyle({
             color: prevColor 
         })
         }   else if (prevType == "Point"){
             prevLayerClicked.setStyle({
-                fillColor: prevFillColor 
+                fillColor: prevColor 
             })
             };
     }
@@ -147,7 +146,7 @@ function highlightFeatureClick(e) {
         info.updateTract(layer.feature.properties);
         prevType = "Polygon";
         //console.log(prevType);
-        prevFillColor = e.target.options.fillColor;
+        prevColor = e.target.options.fillColor;
         layer.setStyle({ //Sets selection color when a polygon is clicked
         fillColor: 'red'
         
@@ -156,7 +155,7 @@ function highlightFeatureClick(e) {
         info.updateStation(layer.feature.properties);
         prevType = "Point";
         //console.log(prevType);
-        prevFillColor = e.target.options.fillColor;
+        prevColor = e.target.options.fillColor;
         layer.setStyle({ //Sets selection color when a polygon is clicked
         fillColor: 'red'
         
@@ -269,6 +268,7 @@ function lineStyleColor(d) {
             d == "1" ? "#ee352e" :
             d == "2" ? "#ee352e" :
             d == "2-3" ? "#ee352e" :
+            d == "3" ? "#ee352e" :
 
             d == "4-5-6" ? "#00933c" :
             d == "4" ? "#00933c" :
