@@ -111,21 +111,21 @@ function highlightFeatureClick(e) {
         // Reset style  
         if (prevType == "Polygon"){
         prevLayerClicked.setStyle({
-            fillColor: prevFillColor //'#A0CBCA',
+            fillColor: prevFillColor //'#A0CBCA'
         })} else if (prevType == "Line"){
         prevLayerClicked.setStyle({
-            color: prevColor //'#A0CBCA',
+            color: prevColor 
         })
         }   else if (prevType == "Point"){
             prevLayerClicked.setStyle({
-                fillColor: prevFillColor //'#A0CBCA',
+                fillColor: prevFillColor 
             })
             };
     }
 
     var layer = e.target;
     
-    console.log(layer);
+    //console.log(layer);
     //console.log(layer.feature.properties);
     //console.log(e.target.options);
 
@@ -143,7 +143,7 @@ function highlightFeatureClick(e) {
         layer.setStyle({ //Sets selection color when a polygon is clicked
             color: 'red'
         });
-    }   else if(layer.feature.geometry.type == "Polygon") {
+    }   else if(layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon") {
         info.updateTract(layer.feature.properties);
         prevType = "Polygon";
         //console.log(prevType);
@@ -176,7 +176,7 @@ function highlightFeatureHover(e) {
     
     //Sets style when mouse is hovering over polygon
 
-    if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon"){
+    if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
         layer.setStyle({
             weight: e.target.options.weight+4,
             fillOpacity: e.target.options.fillOpacity+0.1}
@@ -193,7 +193,7 @@ function resetHighlightHover(e,geojson) {
 
     var layer = e.target;
     
-    if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon"){
+    if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
         layer.setStyle({
             weight: e.target.options.weight-4,
             fillOpacity: e.target.options.fillOpacity-0.1}
@@ -299,8 +299,7 @@ function lineData(input,layerControl){
                 style: lineStyle,
                 renderer: L.svg({pane: 'Lines'}),
                 pane:{pane: 'Lines'},
-                onEachFeature: onEachFeature
-                
+                onEachFeature: onEachFeature       
             });
             //createLineSymbols();
             //createLinePopups(); //Insert options into command below?
