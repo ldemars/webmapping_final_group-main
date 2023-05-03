@@ -83,8 +83,11 @@ function createInfoControl(){
 
 
 //Add event listeners for hover interaction and click  interaction (tracts only currently)
-function onEachFeatureTract(feature, layer) {
+function onEachFeature(feature, layer) {
     prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
+    prevColor = null;
+    prevFillColor = null;
+    
     //Two separate mouse interactions included - hovering & clicking.
     layer.on({
         mouseover: highlightFeatureHover,
@@ -100,35 +103,61 @@ function highlightFeatureClick(e) {
     //Checks if a pre-existing selection exists. If so it resets the styling.
     if (prevLayerClicked !== null) {
         // Reset style  
+        if (prevType == "Polygon"){
         prevLayerClicked.setStyle({
-            fillColor: '#A0CBCA',
-        });
+            fillColor: prevFillColor //'#A0CBCA',
+        })} else {
+        prevLayerClicked.setStyle({
+            color: prevColor //'#A0CBCA',
+        })
+        };
     }
 
     var layer = e.target;
+    
+    //console.log(layer);
+    //console.log(layer.feature.properties);
+    //console.log(e.target.options);
+
     console.log(layer.feature.properties);
 
-    info.updateTract(layer.feature.properties)//Runs info.update function. (info is a global variable, required for this to work)
 
-    layer.setStyle({ //Sets selection color when a polygon is clicked
+    //Runs info.update function. (info is a global variable, required for this to work)
+
+    //Checks for type of layer (Polyline vs Polygon) - stores whichever color value is needed.
+    if (e.target.options.fillColor == null){
+        info.updateLine(layer.feature.properties);
+        prevType = "Line";
+        //console.log(prevType);
+        prevColor = e.target.options.color;
+        layer.setStyle({ //Sets selection color when a polygon is clicked
+            color: 'red'
+        });
+    } else {
+        info.updateTract(layer.feature.properties);
+        prevType = "Polygon";
+        //console.log(prevType);
+        prevFillColor = e.target.options.fillColor;
+        layer.setStyle({ //Sets selection color when a polygon is clicked
         fillColor: 'red'
-    });
+        
+    })};
 
     prevLayerClicked = layer; //Stores clicked layer to be checked later. Basically makes this function a loop if you are repeatedly clicking features.
 }
 
 function highlightFeatureHover(e) {
     var layer = e.target;
-    //console.log(layer.feature.properties);
-    
-    
-    layer.bindPopup(e.target.feature.properties.BoroCT2020,{className: 'mouseoverpopup'}) //Adds hover pop up to layer object - assign class name for css
+
+    var key1 = Object.keys(e.target.feature.properties)[0]
+
+    layer.bindPopup(e.target.feature.properties[key1],{className: 'mouseoverpopup'}) //Adds hover pop up to layer object - assign class name for css
     layer.openPopup(); //Opens pop up while hovering over it.
     
     //Sets style when mouse is hovering over polygon
     layer.setStyle({
-        weight: 5,
-        fillOpacity: 0.7
+        weight: e.target.options.weight+4,
+        fillOpacity: e.target.options.fillOpacity+0.1
     });
 
     //layer.bringToFront();
@@ -140,9 +169,9 @@ function resetHighlightHover(e,geojson) {
     var layer = e.target;
     
     layer.setStyle({ //Resets style to original
-        weight: 0.75,
+        weight: e.target.options.weight-4,
         //fillColor: 'blue',
-        fillOpacity: 0.5
+        fillOpacity: e.target.options.fillOpacity-0.1
     });
 
 
@@ -242,30 +271,9 @@ function lineData(input,layerControl){
                 style: lineStyle,
                 renderer: L.svg({pane: 'Lines'}),
                 pane:{pane: 'Lines'},
-                onEachFeature: function (feature, layer) {
-                    layer.on('mouseover', function () {
-                        this.bindPopup(this.feature.properties.name,{className: 'mouseoverpopupLine'}) //Adds hover pop up to layer object - assign class name for css
-                        this.openPopup(); //Opens pop up while hovering over it.
-                        this.setStyle({
-                            weight: 8,
-                            opacity: 1
-                        });
-
-                    });
-                    layer.on('mouseout', function () {
-                        
-                        lines.resetStyle(this); //mouseout performed in L.geoJson command to allow for resetStyle to be used.
-                        this.closePopup();
-                    });
-                    layer.on('click', function () {
-                        //Checks if a pre-existing selection exists. If so it resets the styling.
-
-                        //var layer = e.target;
-                        console.log(this.feature.properties);
-
-                        info.updateLine(this.feature.properties)//Runs info.update function. (info is a global variable, required for this to work)
-                    });
-                }});
+                onEachFeature: onEachFeature
+                
+            });
             //createLineSymbols();
             //createLinePopups(); //Insert options into command below?
 
@@ -293,7 +301,7 @@ function tractData(input,layerControl){
                 style: tractStyle,
                 renderer: L.svg({pane: 'Tracts'}),
                 pane:{pane: 'Tracts'},
-                onEachFeature: onEachFeatureTract});
+                onEachFeature: onEachFeature});
 
             console.log(tracts);
             
@@ -326,7 +334,7 @@ function stationData(input,layerControl,map){
             return response.json();
         })
         .then(function(json){    
-            var stations = new L.geoJson(json,{OnEachFeature: OnEachFeature,
+            var stations = new L.geoJson(json,{OnEachFeature: OnEachFeatureStation,
                 pointToLayer: function(feature,latlng){
                     return L.circleMarker(latlng,markerOptions);},
                 
@@ -343,7 +351,7 @@ function stationData(input,layerControl,map){
         })
 }
 
-function OnEachFeature(feature, layer) {
+function OnEachFeatureStation(feature, layer) {
     prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
     //Two separate mouse interactions included - hovering & clicking.
    console.log(layer);
