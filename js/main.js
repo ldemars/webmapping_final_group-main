@@ -101,12 +101,9 @@ function highlightFeatureClick(e) {
     if (prevLayerClicked !== null) {
         // Reset style  
         prevLayerClicked.setStyle({
-            weight: 2,
             fillColor: '#A0CBCA',
-            fillOpacity: 0.5
         });
     }
-
 
     var layer = e.target;
     console.log(layer.feature.properties);
@@ -114,12 +111,9 @@ function highlightFeatureClick(e) {
     info.updateTract(layer.feature.properties)//Runs info.update function. (info is a global variable, required for this to work)
 
     layer.setStyle({ //Sets selection color when a polygon is clicked
-        weight: 5,
-        fillOpacity: 0.7,
         fillColor: 'red'
     });
 
-    layer.bringToFront();
     prevLayerClicked = layer; //Stores clicked layer to be checked later. Basically makes this function a loop if you are repeatedly clicking features.
 }
 
@@ -352,6 +346,7 @@ function stationData(input,layerControl,map){
 function OnEachFeature(feature, layer) {
     prevLayerClicked = null; //Global variable declared for later use in highlightFeatureClick.
     //Two separate mouse interactions included - hovering & clicking.
+   console.log(layer);
     layer.on({
         mouseover: highlightFeatureHoverStation,
         mouseout: resetHighlightHoverStation,
