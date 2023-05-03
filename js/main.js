@@ -139,36 +139,9 @@ function resetHighlightHover(e) {
 //
 //Fetch functions
 //
-function tractData(input,layerControl){
-    
-    var tractStyle = {
-        fillColor: 'blue',//getColor(feature.properties.density),
-        weight: 2,
-        opacity: 0.9,
-        color: 'white',
-        fillOpacity: 0.5}
-
-    fetch(input)
-        .then(function(response){
-            return response.json();
-        })
-        .then(function(json){        
-            var tracts = L.geoJson(json,{style: tractStyle,
-                onEachFeature: onEachFeatureTract});
-            console.log(tracts);
-
-            //calcStats();
-            //createChoropleth();
-            //createLegend();
-
-            layerControl.addOverlay(tracts,"Tracts");
-            //tracts.addTo(map);
-            
-        })
-}
 
 function lineStyleColor(d) {
-    console.log(d);
+    //console.log(d);
 
     return  d == "A" ? "#0039a6" : 
             d == "A-C" ? "#0039a6" :
@@ -222,7 +195,7 @@ function lineStyleColor(d) {
 function lineStyle(feature){
     return {
         color: lineStyleColor(feature.properties.name),
-        weight: 2,
+        weight: 5,
         opacity: 0.75
     }
 }
@@ -241,8 +214,39 @@ function lineData(input,layerControl){
 
             console.log(lines);
             layerControl.addOverlay(lines,"Subway Lines");
+            lines.bringToFront();
             lines.addTo(map);
+            
             //createLegend();  
+        })
+}
+
+function tractData(input,layerControl){
+    
+    var tractStyle = {
+        fillColor: 'blue',//getColor(feature.properties.density),
+        weight: 2,
+        opacity: 0.9,
+        color: 'white',
+        fillOpacity: 0.5}
+
+    fetch(input)
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(json){        
+            var tracts = L.geoJson(json,{style: tractStyle,
+                onEachFeature: onEachFeatureTract});
+            console.log(tracts);
+
+            //calcStats();
+            //createChoropleth();
+            //createLegend();
+
+            layerControl.addOverlay(tracts,"Tracts");
+            tracts.bringToBack();
+            //tracts.addTo(map);
+            
         })
 }
 
