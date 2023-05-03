@@ -168,9 +168,6 @@ function highlightFeatureClick(e) {
 function highlightFeatureHover(e) {
     var layer = e.target;
 
-    var key1 = Object.keys(layer.feature.properties)[0]
-
-    
     //Opens pop up while hovering over it.
     
     //Sets style when mouse is hovering over polygon
