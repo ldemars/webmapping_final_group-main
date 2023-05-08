@@ -3,6 +3,17 @@ var filePath = ["data/tracts_rank.geojson",
                 "data/subway_lines.geojson", 
                 "data/subway_stations.geojson"];
 
+var currentYear = "WD_2015";
+var stations;
+
+/*
+    var type = "WD"
+    currentYear = type + "_2015"
+
+    //in your sequence
+    currentyear = type + "_" + index
+*/
+
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
@@ -15,7 +26,7 @@ function createMap(){
 
     //Add zoom control with custom options
     L.control.zoom({
-        position: 'bottomleft'
+        position: 'topleft'
     }).addTo(map);
 
     //Create separate map panes for each geojson layer.
@@ -229,27 +240,86 @@ function processData(data){
 };
 
 function createSequenceControls(){
-    //create range input element (slider)
-    var slider = "<input class='range-slider' type='range'></input>";
-    document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
+
+    var SequenceControl = L.Control.extend({
+        options: {
+            position: 'topright'
+        },
+
+        onAdd: function () {
+            // create the control container div with a particular class name
+            var container = L.DomUtil.create('div', 'panel');
+
+            //create range input element (slider)
+            container.insertAdjacentHTML('beforeend', '<input class="range-slider" type="range">')
+
+            //add skip buttons
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="reverse" title="Reverse"><img src="img/back.png"></button>'); 
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="forward" title="Forward"><img src="img/forward.png"></button>'); 
+
+            L.DomEvent.disableClickPropagation(container);
+
+            return container;
+        }
+    });
+
+    map.addControl(new SequenceControl()); 
 
     //set slider attributes
-    document.querySelector(".range-slider").max = 6;
-    document.querySelector(".range-slider").min = 0;
-    document.querySelector(".range-slider").value = 0;
+    document.querySelector(".range-slider").min = 2015;
+    document.querySelector(".range-slider").max = 2020;
+    document.querySelector(".range-slider").value = 2015;
     document.querySelector(".range-slider").step = 1;
 
-    //add step buttons
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
-
-    //replace button content with images
-    document.querySelector('#reverse').insertAdjacentHTML('beforeend',"<img src='img/back.png'>")
-    document.querySelector('#forward').insertAdjacentHTML('beforeend',"<img src='img/forward.png'>")
 
     var steps = document.querySelectorAll('.step');
 
+    steps.forEach(function(step){
+        step.addEventListener("click", function(){
+            var index = document.querySelector('.range-slider').value;
+            console.log(index)
+            //Step 6: increment or decrement depending on button clicked
+            if (step.id == 'forward'){
+                index++;
+                //Step 7: if past the last attribute, wrap around to first attribute
+                index = index > 2020 ? 2015 : index;
+            } else if (step.id == 'reverse'){
+                index--;
+                //Step 7: if past the first attribute, wrap around to last attribute
+                index = index < 2015 ? 2020 : index;
+            };
 
+            //Step 8: update slider
+            document.querySelector('.range-slider').value = index;
+
+            currentYear = "WD_" + index;
+
+            stations.setStyle(function(feature){
+                var value = feature.properties[currentYear].replace(',','');
+                return{
+                    radius:calcRadius(parseInt(value))
+                }
+            })
+            //Step 9: pass new attribute to update symbols
+            //updatePropSymbols(attributes[index]);
+        })
+    })
+
+    //Step 5: input listener for slider
+    document.querySelector('.range-slider').addEventListener('input', function(){
+        //Step 6: get the new index value
+        var index = this.value;
+        currentYear = "WD_" + index;
+
+        stations.setStyle(function(feature){
+            var value = feature.properties[currentYear].replace(',','');
+            return{
+                radius:calcRadius(parseInt(value))
+            }
+        })
+        //Step 9: pass new attribute to update symbols
+        //updatePropSymbols(attributes[index]);
+    });
 };
 
 ///
@@ -370,7 +440,7 @@ function tractData(input,layerControl){
 
 function stationData(input,layerControl,map){
     var markerOptions = {
-        radius: 5,
+        radius: 4,
         fillColor:'white',
         color:'black',
         weight:4,
@@ -384,18 +454,33 @@ function stationData(input,layerControl,map){
             return response.json();
         })
         .then(function(json){    
-            var stations = new L.geoJson(json,{onEachFeature: onEachFeature,
+            stations = new L.geoJson(json,{onEachFeature: onEachFeature,
                 pointToLayer: function(feature,latlng){
+                    var value = feature.properties[currentYear].replace(',','');
+                    markerOptions.radius = calcRadius(parseInt(value))
                     return L.circleMarker(latlng,markerOptions);},                         
             });
             //calcStats();
             //createPopupContent();
             //createSymbols();
-            //createSequenceControl();
-            console.log(stations);
+            createSequenceControls();
             layerControl.addOverlay(stations,"Subway Stations");
             stations.addTo(map);
         })
+
+ 
+}
+function calcRadius(value)
+{
+    var dataMin = 100.
+        minRadius = 0.5;
+    
+    if (value && value > 0)
+        var radius = 1.0083 * Math.pow(value/dataMin,0.5715) * minRadius;
+    else    
+        var radius = 0.25;
+
+    return radius;
 }
 
 document.addEventListener('DOMContentLoaded',createMap)
