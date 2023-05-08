@@ -54,7 +54,7 @@
 }
 
 .step img {
-	width: 50%;
+	width: 40%;
     height: auto;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .sequence-control-container {
-    width: 350px;
+    width: 250px;
     height: 30px;
     background-color: rgba(255,255,255,0.8);
     padding: 10px;
@@ -77,3 +77,21 @@
     border: solid gray 1px;
 }
 
+.banner {
+    width: 100%;
+    background-color: #0039a6;
+    padding: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Helvetica, sans-serif, sans-serif;
+    color: rgb(255, 255, 255);
+  }
+
+  .information{
+    font-family: poppins , sans-serif;
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-bottom: 50px;
+    padding-top: 50px;
+}

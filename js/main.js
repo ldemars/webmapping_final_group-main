@@ -440,14 +440,14 @@ function tractData(input,layerControl){
          
             layerControl.addOverlay(tracts,"Tracts");
             
-            tracts.addTo(map);
+            //tracts.addTo(map);
             
         })
 }
 
 function stationData(input,layerControl,map){
     var markerOptions = {
-        radius: 4,
+        radius: 2.2,
         fillColor:'white',
         color:'black',
         weight:2.5,
