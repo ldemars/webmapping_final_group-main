@@ -359,7 +359,6 @@ function tractStyle(feature){
 function createChoro(d) {
     
     var d = Number(d);
-    console.log(d);
     
     return  d < 1500 ? "#e9e9e9":
             d < 1000 ? "#d4d4d4":
