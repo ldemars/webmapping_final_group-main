@@ -102,6 +102,9 @@ function createInfoControl(){
     return info;
 }
 
+///
+/// Event Listener Functions
+///
 
 //Add event listeners for hover interaction and click  interaction (tracts only currently)
 function onEachFeature(feature, layer) {
@@ -273,6 +276,40 @@ function createSequenceControls(){
 
 
     var steps = document.querySelectorAll('.step');
+  
+    steps.forEach(function(step){
+        step.addEventListener("click", function(){
+            var index = document.querySelector('.range-slider').value;
+            //increment or decrement depending on button clicked
+            if (step.id == 'forward'){
+                index++;
+                //if past the last attribute, wrap around to first attribute
+                index = index > 6 ? 0 : index;
+            } else if (step.id == 'back'){
+                index--;
+                //if past the first attribute, wrap around to last attribute
+                index = index < 0 ? 6 : index;
+            };
+  
+            //update slider using index value.
+            document.querySelector('.range-slider').value = index;
+  
+            //pass new attribute to update symbols using index value to obtain the current year.
+            //updatePropSymbols(attributes[index]);
+        })
+    })
+  
+    //input listener for slider
+    document.querySelector('.range-slider').addEventListener('input', function(){
+        //get the new index value
+        var index = this.value;
+  
+        //pass new attribute to update symbols
+        //updatePropSymbols(attributes[index]);
+    });
+
+
+    //document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
 
     steps.forEach(function(step){
         step.addEventListener("click", function(){
