@@ -343,8 +343,9 @@ function lineStyle(feature){
 }
 
 function tractStyle(feature){
+    
     return {
-        fillColor: '#A0CBCA',//getColor(feature.properties.density),
+        fillColor: createChoro(feature.properties.Sub_RankMi), //'#A0CBCA'
         weight: 0.75,
         opacity: 0.9,
         color: 'white',
@@ -352,6 +353,21 @@ function tractStyle(feature){
         className: 'tractPoly'
         
     }
+}
+
+
+function createChoro(d) {
+    
+    var d = Number(d);
+    console.log(d);
+    
+    return  d < 1500 ? "#e9e9e9":
+            d < 1000 ? "#d4d4d4":
+            d < 500 ? "#9a9a9a":
+            d < 250 ? "#707070":
+            d < 100 ? "#454545":
+                      "#464949";
+
 }
 
 function lineStyleColor(d) {
