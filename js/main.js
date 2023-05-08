@@ -91,6 +91,9 @@ function createInfoControl(){
     return info;
 }
 
+///
+/// Event Listener Functions
+///
 
 //Add event listeners for hover interaction and click  interaction (tracts only currently)
 function onEachFeature(feature, layer) {
@@ -228,26 +231,78 @@ function processData(data){
     return attributes;
 };
 
-function createSequenceControls(){
+function createSequenceControls(attributes){
     //create range input element (slider)
     var slider = "<input class='range-slider' type='range'></input>";
-    document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
 
-    //set slider attributes
+    var SequenceControl = L.Control.extend({ //Generates slider in bottom left of map - controllable using css style sheet.
+        options: {
+            position: 'topleft'
+        },
+  
+        onAdd: function () {
+            //create the control container div with a particular class name
+            var container = L.DomUtil.create('div', 'sequence-control-container');
+  
+            //create range input element (slider)
+            container.insertAdjacentHTML('beforeend', slider)
+  
+            //add arrow buttons on the slider
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="back" title="Back"><img src="img/back.png"></button>'); 
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="forward" title="Forward"><img src="img/forward.png"></button>'); 
+  
+            //disable any mouse event listeners for the container
+            L.DomEvent.disableClickPropagation(container);
+  
+            return container;
+  
+        }
+    });
+  
+    map.addControl(new SequenceControl());
+  
+    //adds listeners after adding the control//
+    //set slider index values and steps.
     document.querySelector(".range-slider").max = 6;
     document.querySelector(".range-slider").min = 0;
     document.querySelector(".range-slider").value = 0;
     document.querySelector(".range-slider").step = 1;
-
-    //add step buttons
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
-
-    //replace button content with images
-    document.querySelector('#reverse').insertAdjacentHTML('beforeend',"<img src='img/back.png'>")
-    document.querySelector('#forward').insertAdjacentHTML('beforeend',"<img src='img/forward.png'>")
-
+  
     var steps = document.querySelectorAll('.step');
+  
+    steps.forEach(function(step){
+        step.addEventListener("click", function(){
+            var index = document.querySelector('.range-slider').value;
+            //increment or decrement depending on button clicked
+            if (step.id == 'forward'){
+                index++;
+                //if past the last attribute, wrap around to first attribute
+                index = index > 6 ? 0 : index;
+            } else if (step.id == 'back'){
+                index--;
+                //if past the first attribute, wrap around to last attribute
+                index = index < 0 ? 6 : index;
+            };
+  
+            //update slider using index value.
+            document.querySelector('.range-slider').value = index;
+  
+            //pass new attribute to update symbols using index value to obtain the current year.
+            //updatePropSymbols(attributes[index]);
+        })
+    })
+  
+    //input listener for slider
+    document.querySelector('.range-slider').addEventListener('input', function(){
+        //get the new index value
+        var index = this.value;
+  
+        //pass new attribute to update symbols
+        //updatePropSymbols(attributes[index]);
+    });
+
+
+    //document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
 
 
 };
@@ -391,7 +446,7 @@ function stationData(input,layerControl,map){
             //calcStats();
             //createPopupContent();
             //createSymbols();
-            //createSequenceControl();
+            createSequenceControls();
             console.log(stations);
             layerControl.addOverlay(stations,"Subway Stations");
             stations.addTo(map);

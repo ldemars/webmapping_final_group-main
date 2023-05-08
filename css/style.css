@@ -39,6 +39,8 @@
     color: #777;
 }
 
+
+
 #panel {
     width: 25%;
     padding: 20px;
@@ -49,7 +51,7 @@
 }
 
 .range-slider {
-    width: 55%;
+    width: 50%;
 }
 
 .step {
@@ -57,7 +59,8 @@
 }
 
 .step img {
-	width: 100%;
+	width: 50%;
+    height: auto;
 }
 
 
@@ -65,6 +68,17 @@
     float: right;
 }
 
-#reverse {
+#back {
     float: left;
 }
+
+.sequence-control-container {
+    width: 350px;
+    height: 30px;
+    background-color: rgba(255,255,255,0.8);
+    padding: 10px;
+    line-height: 45px;
+    text-align: center;
+    border: solid gray 1px;
+}
+
