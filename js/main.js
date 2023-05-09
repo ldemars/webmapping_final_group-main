@@ -339,8 +339,6 @@ function createSequenceControls(){
             //Performs info controller update for when using buttons.
             updateInfoIndexYear();
             updatePropSymbols();
-            //Step 9: pass new attribute to update symbols
-            //updatePropSymbols(attributes[index]);
         })
     })
 
@@ -354,8 +352,6 @@ function createSequenceControls(){
         updateInfoIndexYear();
         updatePropSymbols();
 
-        //Step 9: pass new attribute to update symbols
-        //updatePropSymbols(attributes[index]);
         //info.updateStation(feature.properties[currentYear]);
     });
 };
