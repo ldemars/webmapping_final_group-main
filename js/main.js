@@ -95,10 +95,10 @@ function createDropdown(map){
         //console.log(frame);
         seqControlInfoUpdate(); //Updates info controller  with new day data.
 
-        currentYear = frame + currentYear.slice(3);
-        
+        currentYear = frame + currentYear.slice(3); 
+
+        //Recalculates proportional symbols
         stations.setStyle(function(feature){
-            console.log(feature.properties[currentYear]);
             var value = feature.properties[currentYear].replace(',','');
             return{
                 radius:calcRadius(parseInt(value))
@@ -106,8 +106,6 @@ function createDropdown(map){
         })
 
     });
-
-    
 }
 
 
@@ -137,16 +135,16 @@ function createInfoControl(){
             : '');
     };
     info.updateStation = function (props) {
-        var dataset = "";
+        var dataString = "";
         if (frame == "WD_") {
-            dataset = "Weekday";
+            dataString = "Weekday";
         } else if(frame == "WE_"){
-            dataset = "Weekend";
+            dataString = "Weekend";
         };
 
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
-            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+currentYear.slice(3) + " " + dataset + " " +" Ridership: " +props[frame+currentYear.slice(3)]+""
+            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+currentYear.slice(3) + " " + dataString + " " +" Ridership: " +props[frame+currentYear.slice(3)]+""
             : '');
     };
 
