@@ -365,11 +365,10 @@ function updateInfoIndexYear(){
 }
 
 function updatePropSymbols(){
-    stations.setStyle(function(feature){
-        //console.log(feature.properties[currentYear]);
+    stations.setStyle(function(feature){ //Sets style for each stations value.
         var value = feature.properties[frame+year].replace(',','');
         return{
-            radius:calcRadius(parseInt(value))
+            radius:calcRadius(parseInt(value)) //Sends values to calcRadius, returns radius for each point feature.
         }
     })
 }
