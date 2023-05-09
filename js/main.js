@@ -1,12 +1,12 @@
 var map;
 var filePath = ["data/tracts_rank.geojson", 
                 "data/subway_lines.geojson", 
-                "data/subway_stations.geojson"];
+                "data/subway_stations.geojson"]; //file paths stored in an array.
 var stations;
 
-var layerSelected = null;
-var year = "2015";
-var frame = "WD_";
+var layerSelected = null; //Initializes global select - starts user with no selection.
+var year = "2015"; //Initializes year - starts user at 2015
+var frame = "WD_"; //Initializes frame - starts user on weekdays.
 
 /*
     var type = "WD"
