@@ -109,7 +109,7 @@ function createDropdown(map){
 
 function createInfoControl(){
     
-    info = L.control(); //Custom controller is generated as a GLOBAL variable.
+    info = L.control({position: 'bottomright'}); //Custom controller is generated as a GLOBAL variable.
 
     info.onAdd = function (map) { //Initializes info controller.
         this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info" for css
