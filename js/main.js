@@ -22,7 +22,7 @@ var frame = "WD_";
 function createMap(){
     //create the map
     map = L.map('map', {
-        center: [40.7, -74.006], //Centered on NYC (lat/long)
+        center: [40.73, -74.006], //Centered on NYC (lat/long)
         zoom: 11,
         minZoom: 9,
         zoomControl: false //initialize without default zoom control to allow for placement options later

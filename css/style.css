@@ -108,4 +108,13 @@
 
 .flag_container{
     text-align: center;
+    padding-bottom: 50px;
+}
+
+.names{
+    font-family: poppins , sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    font-style: italic;
+    color: rgb(169, 169, 169);
 }
