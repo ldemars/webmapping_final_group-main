@@ -1,14 +1,12 @@
 var map;
 var filePath = ["data/tracts_rank.geojson", 
                 "data/subway_lines.geojson", 
-                "data/subway_stations.geojson"];
-
-var currentYear = "WD_2015";
+                "data/subway_stations.geojson"]; //file paths stored in an array.
 var stations;
 
-var layerSelected = null;
-var year = "2015";
-var frame = "WD_";
+var layerSelected = null; //Initializes global select - starts user with no selection.
+var year = "2015"; //Initializes year - starts user at 2015
+var frame = "WD_"; //Initializes frame - starts user on weekdays.
 
 /*
     var type = "WD"
@@ -60,9 +58,11 @@ function createMap(){
 
     //Initializes info controller. No data added until later when user clicks on feature.
     createInfoControl(map);
-    createDropdown(map);
-    //call data functions - adds each to map. Three separate functions required as we need to perform different tasks for each(?).
 
+    //Initializes dropdown menu controller.
+    createDropdown(map);
+
+    //call data functions - adds each to map. Three separate functions required as we need to perform different tasks for each(?).
     lineData(filePath[1],layerControl,map);
     tractData(filePath[0],layerControl,map);//Pass in filePath array value, overlay controller, and map variables.
     stationData(filePath[2],layerControl,map);
@@ -70,40 +70,38 @@ function createMap(){
    
 };
 
+//This function initializes the dropdown menu, and creates an event listener to control the map (changes frame variable instead of year).
 function createDropdown(map){
 
+    //Initializes dropdown controller, stores to variable
     var dropdown = L.control({position: 'topleft'});
     
+
     dropdown.onAdd = function(map){
-        this._div = L.DomUtil.create('div', 'dropdown'); 
+        this._div = L.DomUtil.create('div', 'dropdown'); //Creates dropdown div with class dropdown.
         
-        //Generates html dropdown
-        this._div.setAttribute('id','dropdowndiv')
+        this._div.setAttribute('id','dropdowndiv') //Sets dropdown ID
+
+        //Generates html dropdown. Option values return frame values, selection given ID "days"
         this._div.innerHTML = '<select id="days"><option value="WD_">Weekday</option><option value="WE_">Weekend</option>'; 
         this._div.firstChild.onmousedown = this._div.firstChild.ondblclick = L.DomEvent.stopPropagation;
 
         return this._div;
     }
 
+    //Adds dropdown menu to map
     dropdown.addTo(map);
 
+    //Stores current menu value to menu
     var menu = document.getElementById("days");
 
     //Event listener  for when user changes dropdown menu.
     menu.addEventListener("change", function(){
         frame = menu.value;
-        //console.log(frame);
-        seqControlInfoUpdate(); //Updates info controller  with new day data.
-
-        currentYear = frame + currentYear.slice(3); 
+        updateInfoIndexYear(); //Updates info controller  with new day data.
 
         //Recalculates proportional symbols
-        stations.setStyle(function(feature){
-            var value = feature.properties[currentYear].replace(',','');
-            return{
-                radius:calcRadius(parseInt(value))
-            }
-        })
+        updatePropSymbols();
 
     });
 }
@@ -111,7 +109,7 @@ function createDropdown(map){
 
 function createInfoControl(){
     
-    info = L.control(); //Custom controller is generated as a GLOBAL variable.
+    info = L.control({position: 'bottomright'}); //Custom controller is generated as a GLOBAL variable.
 
     info.onAdd = function (map) { //Initializes info controller.
         this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info" for css
@@ -136,15 +134,25 @@ function createInfoControl(){
     };
     info.updateStation = function (props) {
         var dataString = "";
+        //Checks what the data frame being used is. Stores a string depending on whether weekday or weekend is being used for use in print.
         if (frame == "WD_") {
             dataString = "Weekday";
         } else if(frame == "WE_"){
             dataString = "Weekend";
         };
 
+        var dataNum
+        //Checks if the feature being passed in has no data. If it does have no data, stores a string. Otherwise stores the data.
+        if (props[frame+year] == ""){
+            dataNum = "No data";
+        } else {
+            dataNum = props[frame+year];
+        }
+        
+        //Prints string to info controller using dataString and dataNum.
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
-            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+currentYear.slice(3) + " " + dataString + " " +" Ridership: " +props[frame+currentYear.slice(3)]+""
+            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+year + " " + dataString + " " +" Ridership: " +dataNum+""
             : '');
     };
 
@@ -153,7 +161,7 @@ function createInfoControl(){
 }
 
 ///
-/// Event Listener Functions
+/// Select and hover Event Listener Functions
 ///
 
 //Add event listeners for hover interaction and click  interaction (tracts only currently)
@@ -228,27 +236,28 @@ function highlightFeatureClick(e) {
     prevLayerClicked = layerSelected; //Stores clicked layer to be checked later. Basically makes this function a loop if you are repeatedly clicking features.
 }
 
+//Opens pop up while hovering over it.
 function highlightFeatureHover(e) {
     var layer = e.target;
     var key1
-    //Opens pop up while hovering over it.
     
-    //Sets style when mouse is hovering over polygon
-
+    //If statements create symbology changes when mouse is hovering over a feature.
     if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
         key1 = Object.keys(layer.feature.properties)[0]
-        layer.setStyle({
+        layer.setStyle({ //Sets style when mouse is hovering over polygon or line
             weight: layer.options.weight+4,
             fillOpacity: layer.options.fillOpacity+0.1}
-    )} else if (layer.feature.geometry.type == "Point"){
-        key1 = Object.keys(layer.feature.properties)[1]
-        layer.setStyle({
+    )} else if (layer.feature.geometry.type == "Point"){ //Checks if geojson layer is a point layer
+        key1 = Object.keys(layer.feature.properties)[1] 
+        layer.setStyle({ //Sets style when mouse is hovering over point
             fillOpacity: layer.options.fillOpacity+0.1})
     };
 
+    //Binds hover popup.
     layer.bindPopup(layer.feature.properties[key1],{className: 'mouseoverpopup'}) //Adds hover pop up to layer object - assign class name for css
+
+    //Opens pop up after binding
     layer.openPopup(); 
-    //layer.bringToFront();
 }
 
 
@@ -256,15 +265,15 @@ function resetHighlightHover(e,geojson) {
 
     var layer = e.target;
     
+    //If statement performs symbology changes when mouse is no longer hovering over a feature.
     if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
-        layer.setStyle({
+        layer.setStyle({ //Resets style by performing opposite mathematical operations to the style options.
             weight: layer.options.weight-4,
             fillOpacity: layer.options.fillOpacity-0.1}
     )} else if (layer.feature.geometry.type == "Point"){
         layer.setStyle({
             fillOpacity: layer.options.fillOpacity-0.1})
     };
-
 
     layer.closePopup(); //Closes popup when mouse goes off of polygon
 }
@@ -289,6 +298,7 @@ function processData(data){
 
 function createSequenceControls(){
 
+    //Initializes sequence control
     var SequenceControl = L.Control.extend({
         options: {
             position: 'topright'
@@ -329,71 +339,63 @@ function createSequenceControls(){
             var index = document.querySelector('.range-slider').value;
             console.log(index)
 
-            //Step 6: increment or decrement depending on button clicked
+            //increment or decrement depending on button clicked
             if (step.id == 'forward'){
                 index++;
-                //Step 7: if past the last attribute, wrap around to first attribute
+                //if past the last attribute, wrap around to first attribute
                 index = index > 2020 ? 2015 : index;
             } else if (step.id == 'reverse'){
                 index--;
-                //Step 7: if past the first attribute, wrap around to last attribute
+                //if past the first attribute, wrap around to last attribute
                 index = index < 2015 ? 2020 : index;
             };
 
-            //Step 8: update slider
+            //update slider
             document.querySelector('.range-slider').value = index;
 
-            currentYear = frame + index;
+            year = index;
 
             //Performs info controller update for when using buttons.
-            seqControlInfoUpdate();
-
-            stations.setStyle(function(feature){
-                //console.log(feature.properties[currentYear]);
-                var value = feature.properties[currentYear].replace(',','');
-                return{
-                    radius:calcRadius(parseInt(value))
-                }
-            })
-            //Step 9: pass new attribute to update symbols
-            //updatePropSymbols(attributes[index]);
+            updateInfoIndexYear();
+            updatePropSymbols();
         })
     })
 
-    //Step 5: input listener for slider
+    //input listener for slider
     document.querySelector('.range-slider').addEventListener('input', function(){
-        //Step 6: get the new index value
+        //get the new index value
         var index = this.value;
-        currentYear = frame + index;
-        stations.setStyle(function(feature){
-            var value = feature.properties[currentYear].replace(',','');
-            return{
-                radius:calcRadius(parseInt(value))
-            }
-        })
-
+        year = index;
+        
         //Performs info controller update for when using the slider.
-        seqControlInfoUpdate();
+        updateInfoIndexYear();
+        updatePropSymbols();
 
-        //Step 9: pass new attribute to update symbols
-        //updatePropSymbols(attributes[index]);
-        //info.updateStation(feature.properties[currentYear]);
     });
 };
 
-function seqControlInfoUpdate(){
-    if (layerSelected != null){
-        if (layerSelected.feature.geometry.type == "Point"){
-            info.updateStation(layerSelected.feature.properties);
+function updateInfoIndexYear(){
+    if (layerSelected != null){ //Checks if a layer has been selected
+        if (layerSelected.feature.geometry.type == "Point"){ //Checks type of layer
+            info.updateStation(layerSelected.feature.properties); //If a point selected was previously selected, updates info controller. 
         }
     };
+}
+
+function updatePropSymbols(){
+    stations.setStyle(function(feature){ //Sets style for each stations value.
+        var value = feature.properties[frame+year].replace(',','');
+        return{
+            radius:calcRadius(parseInt(value)) //Sends values to calcRadius, returns radius for each point feature.
+        }
+    })
 }
 
 ///
 //Style functions
 ///
 
-function lineStyle(feature){
+function lineStyle(feature){ //Gets line style data. Calls lineStyleColor on each feature that passes through.
     return {
         color: lineStyleColor(feature.properties.name),
         weight: 5,
@@ -402,7 +404,7 @@ function lineStyle(feature){
     }
 }
 
-function tractStyle(feature){
+function tractStyle(feature){ //Gets tract style data. Calls createChoro on each feature that passes through.
     
     return {
         fillColor: createChoro(feature.properties.Sub_RankMi), //'#A0CBCA'
@@ -416,7 +418,7 @@ function tractStyle(feature){
 }
 
 
-function createChoro(d) {
+function createChoro(d) { //Passed in values have color assigned, returns color hex code.
     
     var d = Number(d);
     
@@ -429,7 +431,7 @@ function createChoro(d) {
 
 }
 
-function lineStyleColor(d) {
+function lineStyleColor(d) { //Passed in values have color assigned, returns color hex code.
     //console.log(d);
 
     return  d == "A" || d == "A-C" || d == "C" || d == "A-C-E" || d == "E" ? "#0039a6" : 
@@ -471,21 +473,18 @@ function lineData(input,layerControl){
         .then(function(json){    
             
             var lines = L.geoJson(json,{
-                style: lineStyle,
+                style: lineStyle, //Runs lineStyle to get style options for each line.
                 renderer: L.svg({pane: 'Lines'}),
-                pane:{pane: 'Lines'},
-                onEachFeature: onEachFeature       
+                pane:{pane: 'Lines'}, //Assigns pane to Lines pane.
+                onEachFeature: onEachFeature //Listeners implemented.        
             });
-            //createLineSymbols();
-            //createLinePopups(); //Insert options into command below?
 
-            console.log(lines);
+            //console.log(lines);
+
+            layerControl.addOverlay(lines,"Subway Lines"); //Adds geojson layer to overlay control.
             
 
-            layerControl.addOverlay(lines,"Subway Lines");
-            
-
-            lines.addTo(map);
+            lines.addTo(map); //Initializes map with this layer open.
             
             
             //createLegend();  
@@ -500,19 +499,15 @@ function tractData(input,layerControl){
         })
         .then(function(json){        
             var tracts = new L.geoJson(json,{
-                style: tractStyle,
+                style: tractStyle, //Runs tractStyle to get tract symbology.
                 renderer: L.svg({pane: 'Tracts'}),
-                pane:{pane: 'Tracts'},
-                onEachFeature: onEachFeature});
+                pane:{pane: 'Tracts'}, //Sets pane to Tracts pane.
+                onEachFeature: onEachFeature //Listeners implemented.
+            });
 
-            console.log(tracts);
-            
-            
-            //tracts.style.zIndex=400 
-            //calcStats();
-            //createLegend();
+            //console.log(tracts);
          
-            layerControl.addOverlay(tracts,"Tracts");
+            layerControl.addOverlay(tracts,"Tracts"); //Adds geojson layer to overlay control.
             
             //tracts.addTo(map);
             
@@ -520,35 +515,39 @@ function tractData(input,layerControl){
 }
 
 function stationData(input,layerControl,map){
-    var markerOptions = {
+    var markerOptions = { //Initializes marker options
         radius: 2.2,
         fillColor:'white',
         color:'black',
         weight:2.5,
         opacity:1,
         fillOpacity:0.8,
-        renderer: L.svg({pane: 'Stations'}),
-        pane:{pane: 'Stations'}
+        renderer: L.svg({pane: 'Stations'}), 
+        pane:{pane: 'Stations'} //Assigns pane to Stations pane within marker options.
     }
     fetch(input)
         .then(function(response){
             return response.json();
         })
         .then(function(json){    
-            stations = new L.geoJson(json,{onEachFeature: onEachFeature,
+            stations = new L.geoJson(json,{
+                onEachFeature: onEachFeature, //Listeners implemented.
+
+                //generates circles at points, using markerOptions.
                 pointToLayer: function(feature,latlng){
-                    var value = feature.properties[currentYear].replace(',','');
+                    var value = feature.properties[frame+year].replace(',','');
                     markerOptions.radius = calcRadius(parseInt(value))
                     return L.circleMarker(latlng,markerOptions);},                         
             });
 
-            createSequenceControls();
-            layerControl.addOverlay(stations,"Subway Stations");
-            stations.addTo(map);
+            createSequenceControls(); //Initializes sequence controller.
+            layerControl.addOverlay(stations,"Subway Stations") //Adds geojson layer to overlay control.
+            stations.addTo(map); //Initializes map with this layer open.
         })
 
  
 }
+
 function calcRadius(value)
 {
     var dataMin = 100.
