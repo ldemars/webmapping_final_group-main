@@ -357,9 +357,9 @@ function createSequenceControls(){
 };
 
 function updateInfoIndexYear(){
-    if (layerSelected != null){
-        if (layerSelected.feature.geometry.type == "Point"){
-            info.updateStation(layerSelected.feature.properties);
+    if (layerSelected != null){ //Checks if a layer has been selected
+        if (layerSelected.feature.geometry.type == "Point"){ //Checks type of layer
+            info.updateStation(layerSelected.feature.properties); //If a point selected was previously selected, updates info controller. 
         }
     };
 }
