@@ -6,8 +6,9 @@ var filePath = ["data/tracts_rank.geojson",
 var currentYear = "WD_2015";
 var stations;
 
-var year = "2015"
-var frame = "WD_"
+var layerSelected = null;
+var year = "2015";
+var frame = "WD_";
 
 /*
     var type = "WD"
@@ -95,7 +96,7 @@ function createInfoControl(){
             : '');
     };
     info.updateStation = function (props) {
-        console.log(currentYear);
+        //console.log(currentYear);
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
             '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+"Data: "+props[currentYear]+""
@@ -145,7 +146,8 @@ function highlightFeatureClick(e) {
     }
 
     var layer = e.target;
-    
+    layerSelected = e.target;
+
     //console.log(layer);
     //console.log(layer.feature.properties);
     //console.log(e.target.options);
@@ -287,7 +289,7 @@ function createSequenceControls(input){
         step.addEventListener("click", function(){
             var index = document.querySelector('.range-slider').value;
             console.log(index)
-            console.log(input)
+
             //Step 6: increment or decrement depending on button clicked
             if (step.id == 'forward'){
                 index++;
@@ -303,8 +305,11 @@ function createSequenceControls(input){
             document.querySelector('.range-slider').value = index;
 
             currentYear = "WD_" + index;
-            
-            
+            console.log(layerSelected)
+
+            if (layerSelected.feature.geometry.type == "Point"){
+                info.updateStation(layerSelected.feature.properties);
+            }
 
             stations.setStyle(function(feature){
                 //console.log(feature.properties[currentYear]);
@@ -456,7 +461,6 @@ function tractData(input,layerControl){
             
             //tracts.style.zIndex=400 
             //calcStats();
-            //createChoropleth();
             //createLegend();
          
             layerControl.addOverlay(tracts,"Tracts");
