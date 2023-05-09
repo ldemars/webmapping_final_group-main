@@ -99,6 +99,14 @@
     font-size: 18px;
 }
 
+.geog{
+    font-family: poppins , sans-serif;
+    padding-left: 15%;
+    padding-right: 15%;
+    padding-bottom: 50px;
+    padding-top: 50px;
+    font-size: 18px;
+}
 .metadata{
     font-family: poppins , sans-serif;
     padding-bottom: 80px;
