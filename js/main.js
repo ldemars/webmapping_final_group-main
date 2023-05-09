@@ -6,6 +6,9 @@ var filePath = ["data/tracts_rank.geojson",
 var currentYear = "WD_2015";
 var stations;
 
+var year = "2015"
+var frame = "WD_"
+
 /*
     var type = "WD"
     currentYear = type + "_2015"
@@ -92,9 +95,10 @@ function createInfoControl(){
             : '');
     };
     info.updateStation = function (props) {
+        console.log(currentYear);
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
-            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+"Data: "+props.WD_2015+""
+            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+"Data: "+props[currentYear]+""
             : '');
     };
 
@@ -242,7 +246,7 @@ function processData(data){
     return attributes;
 };
 
-function createSequenceControls(){
+function createSequenceControls(input){
 
     var SequenceControl = L.Control.extend({
         options: {
@@ -277,14 +281,13 @@ function createSequenceControls(){
 
     var steps = document.querySelectorAll('.step');
   
-
-
     //document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
 
     steps.forEach(function(step){
         step.addEventListener("click", function(){
             var index = document.querySelector('.range-slider').value;
             console.log(index)
+            console.log(input)
             //Step 6: increment or decrement depending on button clicked
             if (step.id == 'forward'){
                 index++;
@@ -300,8 +303,11 @@ function createSequenceControls(){
             document.querySelector('.range-slider').value = index;
 
             currentYear = "WD_" + index;
+            
+            
 
             stations.setStyle(function(feature){
+                //console.log(feature.properties[currentYear]);
                 var value = feature.properties[currentYear].replace(',','');
                 return{
                     radius:calcRadius(parseInt(value))
@@ -316,8 +322,7 @@ function createSequenceControls(){
     document.querySelector('.range-slider').addEventListener('input', function(){
         //Step 6: get the new index value
         var index = this.value;
-        currentYear = "WD_" + index;
-
+        currentYear = frame + index;
         stations.setStyle(function(feature){
             var value = feature.properties[currentYear].replace(',','');
             return{
@@ -326,6 +331,7 @@ function createSequenceControls(){
         })
         //Step 9: pass new attribute to update symbols
         //updatePropSymbols(attributes[index]);
+        //info.updateStation(feature.properties[currentYear]);
     });
 };
 
@@ -482,10 +488,8 @@ function stationData(input,layerControl,map){
                     markerOptions.radius = calcRadius(parseInt(value))
                     return L.circleMarker(latlng,markerOptions);},                         
             });
-            //calcStats();
-            //createPopupContent();
-            //createSymbols();
-            createSequenceControls();
+
+            createSequenceControls(stations);
             layerControl.addOverlay(stations,"Subway Stations");
             stations.addTo(map);
         })
