@@ -72,7 +72,7 @@ function createMap(){
 
 function createDropdown(map){
 
-    var dropdown = L.control({position: 'topright'});
+    var dropdown = L.control({position: 'topleft'});
     
     dropdown.onAdd = function(map){
         this._div = L.DomUtil.create('div', 'dropdown'); 
