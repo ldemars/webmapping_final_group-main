@@ -96,7 +96,6 @@ function createInfoControl(){
             : '');
     };
     info.updateStation = function (props) {
-        console.log(currentYear);
         var dataset = "";
         if (frame == "WD_") {
             dataset = "Week Day";
@@ -307,9 +306,12 @@ function createSequenceControls(input){
 
             currentYear = "WD_" + index;
 
-            if (layerSelected.feature.geometry.type == "Point"){
-                info.updateStation(layerSelected.feature.properties);
-            }
+            //Performs info controller update for when using buttons.
+            if (layerSelected != null){
+                if (layerSelected.feature.geometry.type == "Point"){
+                    info.updateStation(layerSelected.feature.properties);
+                }
+            };
 
             stations.setStyle(function(feature){
                 //console.log(feature.properties[currentYear]);
@@ -334,6 +336,14 @@ function createSequenceControls(input){
                 radius:calcRadius(parseInt(value))
             }
         })
+
+        //Performs info controller update for when using the slider.
+        if (layerSelected != null){
+            if (layerSelected.feature.geometry.type == "Point"){
+                info.updateStation(layerSelected.feature.properties);
+            }
+        };
+
         //Step 9: pass new attribute to update symbols
         //updatePropSymbols(attributes[index]);
         //info.updateStation(feature.properties[currentYear]);
