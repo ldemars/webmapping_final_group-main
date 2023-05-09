@@ -134,6 +134,7 @@ function createInfoControl(){
     };
     info.updateStation = function (props) {
         var dataString = "";
+        //Checks what the data frame being used is. Stores a string depending on whether weekday or weekend is being used for use in print.
         if (frame == "WD_") {
             dataString = "Weekday";
         } else if(frame == "WE_"){
@@ -141,12 +142,14 @@ function createInfoControl(){
         };
 
         var dataNum
+        //Checks if the feature being passed in has no data. If it does have no data, stores a string. Otherwise stores the data.
         if (props[frame+year] == ""){
             dataNum = "No data";
         } else {
             dataNum = props[frame+year];
         }
         
+        //Prints string to info controller using dataString and dataNum.
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
             '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+year + " " + dataString + " " +" Ridership: " +dataNum+""
