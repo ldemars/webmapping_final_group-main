@@ -74,7 +74,7 @@ function createMap(){
 function createDropdown(map){
 
     //Initializes dropdown controller, stores to variable
-    var dropdown = L.control({position: 'topleft'});
+    var dropdown = L.control({position: 'bottomright'});
     
 
     dropdown.onAdd = function(map){
