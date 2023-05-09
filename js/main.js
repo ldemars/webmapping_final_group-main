@@ -151,7 +151,7 @@ function createInfoControl(){
 }
 
 ///
-/// Event Listener Functions
+/// Select and hover Event Listener Functions
 ///
 
 //Add event listeners for hover interaction and click  interaction (tracts only currently)
@@ -226,27 +226,28 @@ function highlightFeatureClick(e) {
     prevLayerClicked = layerSelected; //Stores clicked layer to be checked later. Basically makes this function a loop if you are repeatedly clicking features.
 }
 
+//Opens pop up while hovering over it.
 function highlightFeatureHover(e) {
     var layer = e.target;
     var key1
-    //Opens pop up while hovering over it.
     
-    //Sets style when mouse is hovering over polygon
-
+    //If statements create symbology changes when mouse is hovering over a feature.
     if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
         key1 = Object.keys(layer.feature.properties)[0]
-        layer.setStyle({
+        layer.setStyle({ //Sets style when mouse is hovering over polygon or line
             weight: layer.options.weight+4,
             fillOpacity: layer.options.fillOpacity+0.1}
-    )} else if (layer.feature.geometry.type == "Point"){
-        key1 = Object.keys(layer.feature.properties)[1]
-        layer.setStyle({
+    )} else if (layer.feature.geometry.type == "Point"){ //Checks if geojson layer is a point layer
+        key1 = Object.keys(layer.feature.properties)[1] 
+        layer.setStyle({ //Sets style when mouse is hovering over point
             fillOpacity: layer.options.fillOpacity+0.1})
     };
 
+    //Binds hover popup.
     layer.bindPopup(layer.feature.properties[key1],{className: 'mouseoverpopup'}) //Adds hover pop up to layer object - assign class name for css
+
+    //Opens pop up after binding
     layer.openPopup(); 
-    //layer.bringToFront();
 }
 
 
@@ -254,15 +255,15 @@ function resetHighlightHover(e,geojson) {
 
     var layer = e.target;
     
+    //If statement performs symbology changes when mouse is no longer hovering over a feature.
     if (layer.feature.geometry.type == "LineString" || layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon"){
-        layer.setStyle({
+        layer.setStyle({ //Resets style by performing opposite mathematical operations to the style options.
             weight: layer.options.weight-4,
             fillOpacity: layer.options.fillOpacity-0.1}
     )} else if (layer.feature.geometry.type == "Point"){
         layer.setStyle({
             fillOpacity: layer.options.fillOpacity-0.1})
     };
-
 
     layer.closePopup(); //Closes popup when mouse goes off of polygon
 }
@@ -287,6 +288,7 @@ function processData(data){
 
 function createSequenceControls(){
 
+    //Initializes sequence control
     var SequenceControl = L.Control.extend({
         options: {
             position: 'topright'
@@ -327,18 +329,18 @@ function createSequenceControls(){
             var index = document.querySelector('.range-slider').value;
             console.log(index)
 
-            //Step 6: increment or decrement depending on button clicked
+            //increment or decrement depending on button clicked
             if (step.id == 'forward'){
                 index++;
-                //Step 7: if past the last attribute, wrap around to first attribute
+                //if past the last attribute, wrap around to first attribute
                 index = index > 2020 ? 2015 : index;
             } else if (step.id == 'reverse'){
                 index--;
-                //Step 7: if past the first attribute, wrap around to last attribute
+                //if past the first attribute, wrap around to last attribute
                 index = index < 2015 ? 2020 : index;
             };
 
-            //Step 8: update slider
+            //update slider
             document.querySelector('.range-slider').value = index;
 
             year = index;
@@ -349,9 +351,9 @@ function createSequenceControls(){
         })
     })
 
-    //Step 5: input listener for slider
+    //input listener for slider
     document.querySelector('.range-slider').addEventListener('input', function(){
-        //Step 6: get the new index value
+        //get the new index value
         var index = this.value;
         year = index;
         
@@ -359,7 +361,6 @@ function createSequenceControls(){
         updateInfoIndexYear();
         updatePropSymbols();
 
-        //info.updateStation(feature.properties[currentYear]);
     });
 };
 
@@ -384,7 +385,7 @@ function updatePropSymbols(){
 //Style functions
 ///
 
-function lineStyle(feature){
+function lineStyle(feature){ //Gets line style data. Calls lineStyleColor on each feature that passes through.
     return {
         color: lineStyleColor(feature.properties.name),
         weight: 5,
@@ -393,7 +394,7 @@ function lineStyle(feature){
     }
 }
 
-function tractStyle(feature){
+function tractStyle(feature){ //Gets tract style data. Calls createChoro on each feature that passes through.
     
     return {
         fillColor: createChoro(feature.properties.Sub_RankMi), //'#A0CBCA'
@@ -407,7 +408,7 @@ function tractStyle(feature){
 }
 
 
-function createChoro(d) {
+function createChoro(d) { //Passed in values have color assigned, returns color hex code.
     
     var d = Number(d);
     
@@ -420,7 +421,7 @@ function createChoro(d) {
 
 }
 
-function lineStyleColor(d) {
+function lineStyleColor(d) { //Passed in values have color assigned, returns color hex code.
     //console.log(d);
 
     return  d == "A" || d == "A-C" || d == "C" || d == "A-C-E" || d == "E" ? "#0039a6" : 
@@ -462,21 +463,18 @@ function lineData(input,layerControl){
         .then(function(json){    
             
             var lines = L.geoJson(json,{
-                style: lineStyle,
+                style: lineStyle, //Runs lineStyle to get style options for each line.
                 renderer: L.svg({pane: 'Lines'}),
-                pane:{pane: 'Lines'},
-                onEachFeature: onEachFeature       
+                pane:{pane: 'Lines'}, //Assigns pane to Lines pane.
+                onEachFeature: onEachFeature //Listeners implemented.        
             });
-            //createLineSymbols();
-            //createLinePopups(); //Insert options into command below?
 
-            console.log(lines);
+            //console.log(lines);
+
+            layerControl.addOverlay(lines,"Subway Lines"); //Adds geojson layer to overlay control.
             
 
-            layerControl.addOverlay(lines,"Subway Lines");
-            
-
-            lines.addTo(map);
+            lines.addTo(map); //Initializes map with this layer open.
             
             
             //createLegend();  
@@ -491,19 +489,15 @@ function tractData(input,layerControl){
         })
         .then(function(json){        
             var tracts = new L.geoJson(json,{
-                style: tractStyle,
+                style: tractStyle, //Runs tractStyle to get tract symbology.
                 renderer: L.svg({pane: 'Tracts'}),
-                pane:{pane: 'Tracts'},
-                onEachFeature: onEachFeature});
+                pane:{pane: 'Tracts'}, //Sets pane to Tracts pane.
+                onEachFeature: onEachFeature //Listeners implemented.
+            });
 
-            console.log(tracts);
-            
-            
-            //tracts.style.zIndex=400 
-            //calcStats();
-            //createLegend();
+            //console.log(tracts);
          
-            layerControl.addOverlay(tracts,"Tracts");
+            layerControl.addOverlay(tracts,"Tracts"); //Adds geojson layer to overlay control.
             
             //tracts.addTo(map);
             
@@ -511,35 +505,39 @@ function tractData(input,layerControl){
 }
 
 function stationData(input,layerControl,map){
-    var markerOptions = {
+    var markerOptions = { //Initializes marker options
         radius: 2.2,
         fillColor:'white',
         color:'black',
         weight:2.5,
         opacity:1,
         fillOpacity:0.8,
-        renderer: L.svg({pane: 'Stations'}),
-        pane:{pane: 'Stations'}
+        renderer: L.svg({pane: 'Stations'}), 
+        pane:{pane: 'Stations'} //Assigns pane to Stations pane within marker options.
     }
     fetch(input)
         .then(function(response){
             return response.json();
         })
         .then(function(json){    
-            stations = new L.geoJson(json,{onEachFeature: onEachFeature,
+            stations = new L.geoJson(json,{
+                onEachFeature: onEachFeature, //Listeners implemented.
+
+                //generates circles at points, using markerOptions.
                 pointToLayer: function(feature,latlng){
                     var value = feature.properties[frame+year].replace(',','');
                     markerOptions.radius = calcRadius(parseInt(value))
                     return L.circleMarker(latlng,markerOptions);},                         
             });
 
-            createSequenceControls();
-            layerControl.addOverlay(stations,"Subway Stations");
-            stations.addTo(map);
+            createSequenceControls(); //Initializes sequence controller.
+            layerControl.addOverlay(stations,"Subway Stations") //Adds geojson layer to overlay control.
+            stations.addTo(map); //Initializes map with this layer open.
         })
 
  
 }
+
 function calcRadius(value)
 {
     var dataMin = 100.
