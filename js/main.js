@@ -58,9 +58,11 @@ function createMap(){
 
     //Initializes info controller. No data added until later when user clicks on feature.
     createInfoControl(map);
-    createDropdown(map);
-    //call data functions - adds each to map. Three separate functions required as we need to perform different tasks for each(?).
 
+    //Initializes dropdown menu controller.
+    createDropdown(map);
+
+    //call data functions - adds each to map. Three separate functions required as we need to perform different tasks for each(?).
     lineData(filePath[1],layerControl,map);
     tractData(filePath[0],layerControl,map);//Pass in filePath array value, overlay controller, and map variables.
     stationData(filePath[2],layerControl,map);
@@ -68,29 +70,34 @@ function createMap(){
    
 };
 
+//This function initializes the dropdown menu, and creates an event listener to control the map (changes frame variable instead of year).
 function createDropdown(map){
 
+    //Initializes dropdown controller, stores to variable
     var dropdown = L.control({position: 'topleft'});
     
+
     dropdown.onAdd = function(map){
-        this._div = L.DomUtil.create('div', 'dropdown'); 
+        this._div = L.DomUtil.create('div', 'dropdown'); //Creates dropdown div with class dropdown.
         
-        //Generates html dropdown
-        this._div.setAttribute('id','dropdowndiv')
+        this._div.setAttribute('id','dropdowndiv') //Sets dropdown ID
+
+        //Generates html dropdown. Option values return frame values, selection given ID "days"
         this._div.innerHTML = '<select id="days"><option value="WD_">Weekday</option><option value="WE_">Weekend</option>'; 
         this._div.firstChild.onmousedown = this._div.firstChild.ondblclick = L.DomEvent.stopPropagation;
 
         return this._div;
     }
 
+    //Adds dropdown menu to map
     dropdown.addTo(map);
 
+    //Stores current menu value to menu
     var menu = document.getElementById("days");
 
     //Event listener  for when user changes dropdown menu.
     menu.addEventListener("change", function(){
         frame = menu.value;
-        //console.log(frame);
         updateInfoIndexYear(); //Updates info controller  with new day data.
 
         //Recalculates proportional symbols
