@@ -72,7 +72,7 @@ function createMap(){
 
 function createDropdown(map){
 
-    var dropdown = L.control({position: 'topleft'});
+    var dropdown = L.control({position: 'topright'});
     
     dropdown.onAdd = function(map){
         this._div = L.DomUtil.create('div', 'dropdown'); 
@@ -302,8 +302,8 @@ function createSequenceControls(){
             container.insertAdjacentHTML('beforeend', '<input class="range-slider" type="range">')
 
             //add skip buttons
-            container.insertAdjacentHTML('beforeend', '<button class="step" id="reverse" title="Reverse"><img src="img/back.png"></button>'); 
-            container.insertAdjacentHTML('beforeend', '<button class="step" id="forward" title="Forward"><img src="img/forward.png"></button>'); 
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="reverse" title="Reverse"><img src="img/back_2.png"></button>'); 
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="forward" title="Forward"><img src="img/forward_2.png"></button>'); 
 
             L.DomEvent.disableClickPropagation(container);
 
