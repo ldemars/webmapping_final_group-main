@@ -60,7 +60,7 @@ function createMap(){
 
     //Initializes info controller. No data added until later when user clicks on feature.
     createInfoControl(map);
-
+    createDropdown(map);
     //call data functions - adds each to map. Three separate functions required as we need to perform different tasks for each(?).
 
     lineData(filePath[1],layerControl,map);
@@ -69,6 +69,47 @@ function createMap(){
     
    
 };
+
+function createDropdown(map){
+
+    var dropdown = L.control({position: 'topleft'});
+    
+    dropdown.onAdd = function(map){
+        this._div = L.DomUtil.create('div', 'dropdown'); 
+        
+        //Generates html dropdown
+        this._div.setAttribute('id','dropdowndiv')
+        this._div.innerHTML = '<select id="days"><option value="WD_">Weekday</option><option value="WE_">Weekend</option>'; 
+        this._div.firstChild.onmousedown = this._div.firstChild.ondblclick = L.DomEvent.stopPropagation;
+
+        return this._div;
+    }
+
+    dropdown.addTo(map);
+
+    var menu = document.getElementById("days");
+
+    //Event listener  for when user changes dropdown menu.
+    menu.addEventListener("change", function(){
+        frame = menu.value;
+        //console.log(frame);
+        seqControlInfoUpdate(); //Updates info controller  with new day data.
+
+        currentYear = frame + currentYear.slice(3);
+        
+        stations.setStyle(function(feature){
+            console.log(feature.properties[currentYear]);
+            var value = feature.properties[currentYear].replace(',','');
+            return{
+                radius:calcRadius(parseInt(value))
+            }
+        })
+
+    });
+
+    
+}
+
 
 function createInfoControl(){
     
@@ -98,14 +139,14 @@ function createInfoControl(){
     info.updateStation = function (props) {
         var dataset = "";
         if (frame == "WD_") {
-            dataset = "Week Day";
+            dataset = "Weekday";
         } else if(frame == "WE_"){
             dataset = "Weekend";
         };
 
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
-            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+currentYear.slice(3) + " " + dataset + " " +" Ridership: " +props[currentYear]+""
+            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+currentYear.slice(3) + " " + dataset + " " +" Ridership: " +props[frame+currentYear.slice(3)]+""
             : '');
     };
 
@@ -248,7 +289,7 @@ function processData(data){
     return attributes;
 };
 
-function createSequenceControls(input){
+function createSequenceControls(){
 
     var SequenceControl = L.Control.extend({
         options: {
@@ -304,7 +345,7 @@ function createSequenceControls(input){
             //Step 8: update slider
             document.querySelector('.range-slider').value = index;
 
-            currentYear = "WD_" + index;
+            currentYear = frame + index;
 
             //Performs info controller update for when using buttons.
             seqControlInfoUpdate();
@@ -503,7 +544,7 @@ function stationData(input,layerControl,map){
                     return L.circleMarker(latlng,markerOptions);},                         
             });
 
-            createSequenceControls(stations);
+            createSequenceControls();
             layerControl.addOverlay(stations,"Subway Stations");
             stations.addTo(map);
         })
