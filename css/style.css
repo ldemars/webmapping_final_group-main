@@ -92,8 +92,15 @@
 
 .information{
     font-family: poppins , sans-serif;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 15%;
+    padding-right: 15%;
     padding-bottom: 50px;
     padding-top: 50px;
+}
+
+.metadata{
+    font-family: poppins , sans-serif;
+    padding-bottom: 80px;
+    font-size: 14px;
+    color: rgb(169, 169, 169);
 }
