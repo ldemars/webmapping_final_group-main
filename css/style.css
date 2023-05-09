@@ -1,6 +1,6 @@
 /*insert style here*/
 #map {
-    height: 80vh;
+    height: 85vh;
     width: 100%;
     display: inline-block;
 }
@@ -37,14 +37,14 @@
 }
 
 .panel {
-    width: 25%;
+    width: 75%;
     padding: 10px;
     display: inline-block;
-    background-color: rgba(255,255,255,0.75);
+    background-color: rgba(255,255,255,0.55);
     vertical-align: top;
     text-align: center;
     line-height: 42px;
-    border: solid gray 1px;
+
 }
 
 .range-slider {
@@ -63,7 +63,8 @@
 
 #forward {
     float: right;
-    width: 10%;
+    width: 20%;
+   
 }
 
 #back {
@@ -72,8 +73,8 @@
 
 .sequence-control-container {
     width: 250px;
-    height: 30px;
-    background-color: rgba(255,255,255,0.8);
+    height: 18px;
+    background-color: rgba(255,255,255,0.9);
     padding: 10px;
     line-height: 45px;
     text-align: center;

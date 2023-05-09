@@ -20,7 +20,7 @@ var frame = "WD_"; //Initializes frame - starts user on weekdays.
 function createMap(){
     //create the map
     map = L.map('map', {
-        center: [40.73, -74.006], //Centered on NYC (lat/long)
+        center: [40.74, -74.006], //Centered on NYC (lat/long)
         zoom: 11,
         minZoom: 9,
         zoomControl: false //initialize without default zoom control to allow for placement options later
@@ -311,8 +311,8 @@ function createSequenceControls(){
             container.insertAdjacentHTML('beforeend', '<input class="range-slider" type="range">');
 
             //add skip buttons
-            container.insertAdjacentHTML('beforeend', '<button class="step" id="reverse" title="Reverse"><img src="img/back_2.png"></button>'); 
-            container.insertAdjacentHTML('beforeend', '<button class="step" id="forward" title="Forward"><img src="img/forward_2.png"></button>'); 
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="reverse" title="Reverse"><img src="img/back_v2.png"></button>'); 
+            container.insertAdjacentHTML('beforeend', '<button class="step" id="forward" title="Forward"><img src="img/forward_v2.png"></button>'); 
 
             L.DomEvent.disableClickPropagation(container);
 
