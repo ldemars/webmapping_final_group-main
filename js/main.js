@@ -91,15 +91,10 @@ function createDropdown(map){
     menu.addEventListener("change", function(){
         frame = menu.value;
         //console.log(frame);
-        seqControlInfoUpdate(); //Updates info controller  with new day data.
+        updateInfoIndexYear(); //Updates info controller  with new day data.
 
         //Recalculates proportional symbols
-        stations.setStyle(function(feature){
-            var value = feature.properties[frame+year].replace(',','');
-            return{
-                radius:calcRadius(parseInt(value))
-            }
-        })
+        updatePropSymbols();
 
     });
 }
@@ -342,15 +337,8 @@ function createSequenceControls(){
             year = index;
 
             //Performs info controller update for when using buttons.
-            seqControlInfoUpdate();
-
-            stations.setStyle(function(feature){
-                //console.log(feature.properties[currentYear]);
-                var value = feature.properties[frame+year].replace(',','');
-                return{
-                    radius:calcRadius(parseInt(value))
-                }
-            })
+            updateInfoIndexYear();
+            updatePropSymbols();
             //Step 9: pass new attribute to update symbols
             //updatePropSymbols(attributes[index]);
         })
@@ -361,15 +349,10 @@ function createSequenceControls(){
         //Step 6: get the new index value
         var index = this.value;
         year = index;
-        stations.setStyle(function(feature){
-            var value = feature.properties[frame+year].replace(',','');
-            return{
-                radius:calcRadius(parseInt(value))
-            }
-        })
-
+        
         //Performs info controller update for when using the slider.
-        seqControlInfoUpdate();
+        updateInfoIndexYear();
+        updatePropSymbols();
 
         //Step 9: pass new attribute to update symbols
         //updatePropSymbols(attributes[index]);
@@ -377,12 +360,22 @@ function createSequenceControls(){
     });
 };
 
-function seqControlInfoUpdate(){
+function updateInfoIndexYear(){
     if (layerSelected != null){
         if (layerSelected.feature.geometry.type == "Point"){
             info.updateStation(layerSelected.feature.properties);
         }
     };
+}
+
+function updatePropSymbols(){
+    stations.setStyle(function(feature){
+        //console.log(feature.properties[currentYear]);
+        var value = feature.properties[frame+year].replace(',','');
+        return{
+            radius:calcRadius(parseInt(value))
+        }
+    })
 }
 
 ///
