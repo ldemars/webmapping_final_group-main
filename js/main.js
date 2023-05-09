@@ -2,8 +2,6 @@ var map;
 var filePath = ["data/tracts_rank.geojson", 
                 "data/subway_lines.geojson", 
                 "data/subway_stations.geojson"];
-
-var currentYear = "WD_2015";
 var stations;
 
 var layerSelected = null;
@@ -95,11 +93,9 @@ function createDropdown(map){
         //console.log(frame);
         seqControlInfoUpdate(); //Updates info controller  with new day data.
 
-        currentYear = frame + currentYear.slice(3); 
-
         //Recalculates proportional symbols
         stations.setStyle(function(feature){
-            var value = feature.properties[currentYear].replace(',','');
+            var value = feature.properties[frame+year].replace(',','');
             return{
                 radius:calcRadius(parseInt(value))
             }
@@ -144,7 +140,7 @@ function createInfoControl(){
 
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
-            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+currentYear.slice(3) + " " + dataString + " " +" Ridership: " +props[frame+currentYear.slice(3)]+""
+            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+year + " " + dataString + " " +" Ridership: " +props[frame+year]+""
             : '');
     };
 
@@ -343,14 +339,14 @@ function createSequenceControls(){
             //Step 8: update slider
             document.querySelector('.range-slider').value = index;
 
-            currentYear = frame + index;
+            year = index;
 
             //Performs info controller update for when using buttons.
             seqControlInfoUpdate();
 
             stations.setStyle(function(feature){
                 //console.log(feature.properties[currentYear]);
-                var value = feature.properties[currentYear].replace(',','');
+                var value = feature.properties[frame+year].replace(',','');
                 return{
                     radius:calcRadius(parseInt(value))
                 }
@@ -364,9 +360,9 @@ function createSequenceControls(){
     document.querySelector('.range-slider').addEventListener('input', function(){
         //Step 6: get the new index value
         var index = this.value;
-        currentYear = frame + index;
+        year = index;
         stations.setStyle(function(feature){
-            var value = feature.properties[currentYear].replace(',','');
+            var value = feature.properties[frame+year].replace(',','');
             return{
                 radius:calcRadius(parseInt(value))
             }
@@ -537,7 +533,7 @@ function stationData(input,layerControl,map){
         .then(function(json){    
             stations = new L.geoJson(json,{onEachFeature: onEachFeature,
                 pointToLayer: function(feature,latlng){
-                    var value = feature.properties[currentYear].replace(',','');
+                    var value = feature.properties[frame+year].replace(',','');
                     markerOptions.radius = calcRadius(parseInt(value))
                     return L.circleMarker(latlng,markerOptions);},                         
             });
