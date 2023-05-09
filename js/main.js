@@ -96,10 +96,17 @@ function createInfoControl(){
             : '');
     };
     info.updateStation = function (props) {
-        //console.log(currentYear);
+        console.log(currentYear);
+        var dataset = "";
+        if (frame == "WD_") {
+            dataset = "Week Day";
+        } else if(frame == "WE_"){
+            dataset = "Weekend";
+        };
+
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
-            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+"Data: "+props[currentYear]+""
+            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+currentYear.slice(3) + " " + dataset + " " +" Ridership: " +props[currentYear]+""
             : '');
     };
 
@@ -128,7 +135,10 @@ function onEachFeature(feature, layer) {
 //This function colors the polygon when it is clicked, adds the information to the Info Controller, and resets styling for previously clicked polygon.
 function highlightFeatureClick(e) {
     
-    //Checks if a pre-existing selection exists. If so it resets the styling.
+    //Checks if a pre-existing selection exists. 
+    //Then checks the type of layer the selection was using prevType.
+    //If a match occurs resets the styling using stored prevColor.
+    //This allows for the subway line colors to be remembered with no need for hard coding.
     if (prevLayerClicked !== null) {
         // Reset style  
         if (prevType == "Polygon" || prevType == "MultiPolygon"){
@@ -145,48 +155,39 @@ function highlightFeatureClick(e) {
             };
     }
 
-    var layer = e.target;
-    layerSelected = e.target;
-
-    //console.log(layer);
-    //console.log(layer.feature.properties);
-    //console.log(e.target.options);
-
-    console.log(layer.feature.properties);
+    layerSelected = e.target; //Saves targeted layer to global variable.
+    console.log(layerSelected.feature.properties);
 
 
     //Runs info.update function. (info is a global variable, required for this to work)
 
-    //Checks for type of layer (Polyline vs Polygon) - stores whichever color value is needed.
-    if (layer.feature.geometry.type == "LineString"){
-        info.updateLine(layer.feature.properties);
-        prevType = "Line";
-        //console.log(prevType);
-        prevColor = layer.options.color;
-        layer.setStyle({ //Sets selection color when a polygon is clicked
+    //Checks for type of layer (Polyline vs Polygon vs Point) - performs styling and updates info controller accordingly.
+    if (layerSelected.feature.geometry.type == "LineString"){
+        info.updateLine(layerSelected.feature.properties); //Updates info controller
+        prevType = "Line"; //Stores type
+        prevColor = layerSelected.options.color; //Stores color of layer
+        layerSelected.setStyle({ //Sets selection color when a feature is clicked
             color: 'red'
         });
-    }   else if(layer.feature.geometry.type == "Polygon" || layer.feature.geometry.type == "MultiPolygon") {
-        info.updateTract(layer.feature.properties);
+    }   else if(layerSelected.feature.geometry.type == "Polygon" || layerSelected.feature.geometry.type == "MultiPolygon") {
+        info.updateTract(layerSelected.feature.properties);
         prevType = "Polygon";
-        //console.log(prevType);
-        prevColor = layer.options.fillColor;
-        layer.setStyle({ //Sets selection color when a polygon is clicked
+        prevColor = layerSelected.options.fillColor;
+        layerSelected.setStyle({ //Sets selection color when a feature is clicked
         fillColor: 'red'
         
     })}
-        else if(layer.feature.geometry.type == "Point") {
-        info.updateStation(layer.feature.properties);
+        else if(layerSelected.feature.geometry.type == "Point") {
+        info.updateStation(layerSelected.feature.properties);
         prevType = "Point";
-        //console.log(prevType);
-        prevColor = layer.options.fillColor;
-        layer.setStyle({ //Sets selection color when a polygon is clicked
+        prevColor = layerSelected.options.fillColor;
+        layerSelected.setStyle({ //Sets selection color when a feature is clicked
         fillColor: 'red'
         
     })}
     ;
 
-    prevLayerClicked = layer; //Stores clicked layer to be checked later. Basically makes this function a loop if you are repeatedly clicking features.
+    prevLayerClicked = layerSelected; //Stores clicked layer to be checked later. Basically makes this function a loop if you are repeatedly clicking features.
 }
 
 function highlightFeatureHover(e) {
@@ -305,7 +306,6 @@ function createSequenceControls(input){
             document.querySelector('.range-slider').value = index;
 
             currentYear = "WD_" + index;
-            console.log(layerSelected)
 
             if (layerSelected.feature.geometry.type == "Point"){
                 info.updateStation(layerSelected.feature.properties);
