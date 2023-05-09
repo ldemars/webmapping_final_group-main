@@ -307,11 +307,7 @@ function createSequenceControls(input){
             currentYear = "WD_" + index;
 
             //Performs info controller update for when using buttons.
-            if (layerSelected != null){
-                if (layerSelected.feature.geometry.type == "Point"){
-                    info.updateStation(layerSelected.feature.properties);
-                }
-            };
+            sequenceControlInfoUpdate();
 
             stations.setStyle(function(feature){
                 //console.log(feature.properties[currentYear]);
@@ -338,17 +334,21 @@ function createSequenceControls(input){
         })
 
         //Performs info controller update for when using the slider.
-        if (layerSelected != null){
-            if (layerSelected.feature.geometry.type == "Point"){
-                info.updateStation(layerSelected.feature.properties);
-            }
-        };
+        sequenceControlInfoUpdate();
 
         //Step 9: pass new attribute to update symbols
         //updatePropSymbols(attributes[index]);
         //info.updateStation(feature.properties[currentYear]);
     });
 };
+
+function sequenceControlInfoUpdate(){
+    if (layerSelected != null){
+        if (layerSelected.feature.geometry.type == "Point"){
+            info.updateStation(layerSelected.feature.properties);
+        }
+    };
+}
 
 ///
 //Style functions
