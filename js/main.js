@@ -303,13 +303,12 @@ function createSequenceControls(){
         options: {
             position: 'topright'
         },
-
         onAdd: function () {
             // create the control container div with a particular class name
             var container = L.DomUtil.create('div', 'panel');
-
+            container.insertAdjacentHTML('beforeend','<h4 id="seqHeader">Year: '+year+'</h4>');
             //create range input element (slider)
-            container.insertAdjacentHTML('beforeend', '<input class="range-slider" type="range">')
+            container.insertAdjacentHTML('beforeend', '<input class="range-slider" type="range">');
 
             //add skip buttons
             container.insertAdjacentHTML('beforeend', '<button class="step" id="reverse" title="Reverse"><img src="img/back_2.png"></button>'); 
@@ -318,7 +317,7 @@ function createSequenceControls(){
             L.DomEvent.disableClickPropagation(container);
 
             return container;
-        }
+        },
     });
 
     map.addControl(new SequenceControl()); 
@@ -337,7 +336,7 @@ function createSequenceControls(){
     steps.forEach(function(step){
         step.addEventListener("click", function(){
             var index = document.querySelector('.range-slider').value;
-            console.log(index)
+            //console.log(index)
 
             //increment or decrement depending on button clicked
             if (step.id == 'forward'){
@@ -358,6 +357,9 @@ function createSequenceControls(){
             //Performs info controller update for when using buttons.
             updateInfoIndexYear();
             updatePropSymbols();
+
+            seqHeader.innerText = "Year: "+year;
+
         })
     })
 
@@ -370,6 +372,7 @@ function createSequenceControls(){
         //Performs info controller update for when using the slider.
         updateInfoIndexYear();
         updatePropSymbols();
+        seqHeader.innerText = "Year: "+year;
 
     });
 };
