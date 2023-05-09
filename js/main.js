@@ -307,7 +307,7 @@ function createSequenceControls(input){
             currentYear = "WD_" + index;
 
             //Performs info controller update for when using buttons.
-            controlInfoUpdate();
+            seqControlInfoUpdate();
 
             stations.setStyle(function(feature){
                 //console.log(feature.properties[currentYear]);
@@ -334,7 +334,7 @@ function createSequenceControls(input){
         })
 
         //Performs info controller update for when using the slider.
-        controlInfoUpdate();
+        seqControlInfoUpdate();
 
         //Step 9: pass new attribute to update symbols
         //updatePropSymbols(attributes[index]);
@@ -342,7 +342,7 @@ function createSequenceControls(input){
     });
 };
 
-function controlInfoUpdate(){
+function seqControlInfoUpdate(){
     if (layerSelected != null){
         if (layerSelected.feature.geometry.type == "Point"){
             info.updateStation(layerSelected.feature.properties);
