@@ -140,9 +140,16 @@ function createInfoControl(){
             dataString = "Weekend";
         };
 
+        var dataNum
+        if (props[frame+year] == ""){
+            dataNum = "No data";
+        } else {
+            dataNum = props[frame+year];
+        }
+        
         this._div.innerHTML = 
             '<h4>Click to select feature</h4>' +  (props ?
-            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+year + " " + dataString + " " +" Ridership: " +props[frame+year]+""
+            '<b>Subway Station: ' + props.name + '</b><br />'+"Lines: "+props.line+'<br />'+year + " " + dataString + " " +" Ridership: " +dataNum+""
             : '');
     };
 
