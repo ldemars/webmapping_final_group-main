@@ -34,6 +34,13 @@
     color: #777;
 }
 
+.dropdown{
+    position:relative;
+    padding:5px;
+    right:5px;
+    bottom:7px;
+}
+
 .panel {
     width: 70%;
     position:relative;

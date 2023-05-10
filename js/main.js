@@ -25,11 +25,6 @@ function createMap(){
         zoomControl: false //initialize without default zoom control to allow for placement options later
     });
 
-    //Add zoom control with custom options
-    L.control.zoom({
-        position: 'topleft'
-    }).addTo(map);
-
     //Create separate map panes for each geojson layer.
     map.createPane('Tracts');
     map.createPane('Lines');
@@ -53,7 +48,7 @@ function createMap(){
 
     //Create overlay control, initialized with baseLayer and no overlays. Sort layers alphabetically 
     var overlays 
-    var layerControl = L.control.layers(baseLayer, overlays,{sortLayers: true,position:'topleft'}).addTo(map);
+    var layerControl = L.control.layers(baseLayer, overlays,{sortLayers: true,position:'bottomleft'}).addTo(map);
 
     //Initializes info controller. No data added until later when user clicks on feature.
     createInfoControl(map);
@@ -63,47 +58,14 @@ function createMap(){
     tractData(filePath[0],layerControl,map);//Pass in filePath array value, overlay controller, and map variables.
     stationData(filePath[2],layerControl,map);
     
-    //Initializes dropdown menu controller.
-    createDropdown(map);
-   
-};
-
-//This function initializes the dropdown menu, and creates an event listener to control the map (changes frame variable instead of year).
-function createDropdown(map){
-
-    //Initializes custom dropdown controller, stores to variable
-    var dropdown = L.control({position: 'bottomright'});
     
+   
+    //Add zoom control with custom options
+    L.control.zoom({
+        position: 'topright'
+    }).addTo(map);
 
-    dropdown.onAdd = function(map){
-        this._div = L.DomUtil.create('div', 'dropdown'); //Creates dropdown div with class dropdown.
-        
-        this._div.setAttribute('id','dropdowndiv') //Sets dropdown ID
-
-        //Generates html dropdown. Option values return frame values, selection given ID "days". 
-        this._div.innerHTML = '<select id="days"><option value="WD_">Weekday</option><option value="WE_">Weekend</option>'; 
-        this._div.firstChild.onmousedown = this._div.firstChild.ondblclick = L.DomEvent.stopPropagation;
-
-        return this._div;
-    }
-
-    //Adds dropdown menu to map
-    dropdown.addTo(map);
-
-    //Stores current menu value to menu
-    var menu = document.getElementById("days");
-
-    //Event listener  for when user changes dropdown menu.
-    menu.addEventListener("change", function(){
-        frame = menu.value; //Gets current menu value selected in the dropdown menu, saves to global frame variable.
-        updateInfoIndexYear(); //Updates info controller  with new day data.
-
-        //Recalculates proportional symbols with new frame value.
-        updatePropSymbols();
-
-    });
-}
-
+};
 
 function createInfoControl(){
     
@@ -299,7 +261,7 @@ function createSequenceControls(){
     //Initializes sequence control
     var SequenceControl = L.Control.extend({
         options: {
-            position: 'topright' //Places sequence controller in top right corner of map
+            position: 'topleft' //Places sequence controller in top right corner of map
         },
         onAdd: function () {
             // create the control container div with a particular class name
@@ -394,6 +356,42 @@ function updatePropSymbols(){
             radius:calcRadius(parseInt(value)) //Sends values to calcRadius, returns radius for each point feature.
         }
     })
+}
+
+//This function initializes the dropdown menu, and creates an event listener to control the map (changes frame variable instead of year).
+function createDropdown(map){
+
+    //Initializes custom dropdown controller, stores to variable
+    var dropdown = L.control({position: 'topleft'});
+    
+
+    dropdown.onAdd = function(map){
+        this._div = L.DomUtil.create('div', 'dropdown'); //Creates dropdown div with class dropdown.
+        
+        this._div.setAttribute('id','dropdowndiv') //Sets dropdown ID
+
+        //Generates html dropdown. Option values return frame values, selection given ID "days". 
+        this._div.innerHTML = '<select id="days"><option value="WD_">Weekday</option><option value="WE_">Weekend</option>'; 
+        this._div.firstChild.onmousedown = this._div.firstChild.ondblclick = L.DomEvent.stopPropagation;
+
+        return this._div;
+    }
+
+    //Adds dropdown menu to map
+    dropdown.addTo(map);
+
+    //Stores current menu value to menu
+    var menu = document.getElementById("days");
+
+    //Event listener  for when user changes dropdown menu.
+    menu.addEventListener("change", function(){
+        frame = menu.value; //Gets current menu value selected in the dropdown menu, saves to global frame variable.
+        updateInfoIndexYear(); //Updates info controller  with new day data.
+
+        //Recalculates proportional symbols with new frame value.
+        updatePropSymbols();
+
+    });
 }
 
 ///
@@ -565,6 +563,8 @@ function stationData(input,layerControl,map){ //Loads station geojson
             });
 
             createSequenceControls(); //Initializes sequence controller.
+            //Initializes dropdown menu controller.
+            createDropdown(map);
             layerControl.addOverlay(stations,"Subway Stations") //Adds geojson layer to overlay control.
             stations.addTo(map); //Initializes map with this layer open.
         })
