@@ -29,13 +29,13 @@ Logan DeMars, Luke Casesa
 | 2              | Census tracts   | Census tract polygons on top of basemap and below subway data https://www.nyc.gov/site/planning/data-maps/open-data/census-download-metadata.page |
 | 3              | Subway Lines    | Location of subway routes indicated by colored polylines https://www.baruch.cuny.edu/confluence/display/geoportal/NYC+Mass+Transit+Spatial+Layers+Archive                |
 | 4              | Subway Stations | Location of subway stations represented by proportional symbols https://www.baruch.cuny.edu/confluence/display/geoportal/NYC+Mass+Transit+Spatial+Layers+Archive                 |
-| 5              | Temporal Graph  | Shows yearly ridership data for selected route/station, line graph.                                                                                   |
+| 5              | Ridership       | Ridership data displayed using proportional symbols.                                                                                   |
 | 6              | Context         | Map information alongside guide and context for users                                                                                                 |
 
 | # |  Interaction                   |                                                                                                                 |
 | :---------- | :------------------ | :--------------------------------------------------------------------------------------------------------------- |
-| 1           | Overlay Control     | Overlay: User controls the visibility of subway polylines, station points, census polygons.                      |
-| 2           | Sequence Slider     | Sequence: Allows user to scroll through ridership data from 2015-2020                                            |
+| 1           | Overlay Control     | Overlay: User controls the visibility of subway polyline, station point, and census polygon layers.              |
+| 2           | Sequence Slider     | Sequence: Allows user to scroll through ridership data from 2015-2020, resizing station circle radius that indicates ridership.                                            |
 | 3           | Retrieve Hover      | Retrieve: When a user hovers over a feature, a retrieve popup will show the name of the feature.                 |
 | 4           | Resymbolize Hover   | Resymbolize: When a user hovers over a feature, the feature will be slightly highlighted through opacity         |
 | 5           | Retrieve Select     | Retrieve: When a user clicks a feature, a retrieve panel will return information about that feature.             |
