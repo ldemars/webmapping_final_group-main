@@ -67,6 +67,7 @@ function createMap(){
 
     var windOpen = L.control.window(map,{
         title:"Test",
+        content: "Testing paragraph",
         visible:true})
     
 };
