@@ -66,8 +66,8 @@ function createMap(){
     }).addTo(map);
 
     var windOpen = L.control.window(map,{
-        title:"Test",
-        content: "Testing paragraph",
+        title:"Hello and Welcome to our Geography 575 Final Project!",
+        content: " This is an interactive user experience designed to help MTA riders understand commuting and the subway system based on historical ridership data and census accessibility ranks. You can use the slider in the top left to cycle through ridership data years, use the weekend/weekday button to switch between, use the layers button to toggle layer visibility, use the (+) (-), pinch, or double tap to zoom, and select line, station, and census block features by clicking for a retrieve pop up.  ",
         visible:true})
     
 };
