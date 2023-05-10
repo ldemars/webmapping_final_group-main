@@ -1,4 +1,3 @@
-/*insert style here*/
 #map {
     height: 85vh;
     width: 100%;
@@ -16,10 +15,10 @@
 
 .leaflet-popup-pane {
     opacity:0.85;
-    pointer-events:none;
+    pointer-events:none; /*Crucial to avoid popup flickering*/
 }
 .leaflet-popup-tip {
-    pointer-events:none;
+    pointer-events:none; /*Crucial to avoid popup flickering*/
 }
 .info {
     float:bottom;
@@ -44,8 +43,6 @@
     vertical-align: top;
     text-align: center;
     padding:5px;
-    /*bottom:60px;
-    right:100px;*/
 }
 
 .range-slider {
@@ -80,16 +77,6 @@
     float: right;
     right: 8px;
    
-}
-
-
-.sequence-control-container {
-    width: 250px;
-    height: 10px;
-    background-color: rgba(255,255,255,0.9);
-    padding: 10px;
-    text-align: center;
-    border: solid gray 1px;
 }
 
 .banner {
