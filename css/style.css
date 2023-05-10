@@ -6,6 +6,7 @@
 }
 
 .mouseoverpopup {
+    pointer-events:none;
     box-shadow: none; 
     font-weight: bold;
     background-attachment: #f4913b;
