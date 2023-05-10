@@ -408,6 +408,19 @@ function updatePropSymbols(){
 //Style functions
 ///
 
+function calcRadius(value) //Passed in values have radius calculated.
+{
+    var dataMin = 100.
+        minRadius = 0.5; //Set minimum radius
+    
+    if (value && value > 0)
+        var radius = 1.0083 * Math.pow(value/dataMin,0.5715) * minRadius;
+    else    
+        var radius = 0.25;
+
+    return radius;
+}
+
 function lineStyle(feature){ //Gets line style data. Calls lineStyleColor on each feature that passes through.
     return {
         color: lineStyleColor(feature.properties.name),
@@ -432,15 +445,15 @@ function tractStyle(feature){ //Gets tract style data. Calls createChoro on each
 
 
 function createChoro(d) { //Passed in values have color assigned, returns color hex code.
-    console.log(d);
+    //console.log(d);
     var d = Number(d);
     
-    return  d > 1500 && d < 2000 ? "#464949":
-            d > 1000  && d < 1500 ? "#454545":
-            d < 1000 && d > 500 ? "#707070":
-            d < 500 && d > 250 ? "#9a9a9a":
-            d < 250 && d > 100 ? "#d4d4d4":
-            d < 100 && d > 0 ? "#e9e9e9": 
+    return  d >= 1500 && d < 2000 ? "#464949":
+            d >= 1000  && d < 1500 ? "#454545":
+            d < 1000 && d >= 500 ? "#707070":
+            d < 500 && d >= 250 ? "#9a9a9a":
+            d < 250 && d >= 100 ? "#d4d4d4":
+            d < 100 && d >= 0 ? "#e9e9e9": 
                                  "#000000";
 
 }
@@ -448,6 +461,7 @@ function createChoro(d) { //Passed in values have color assigned, returns color 
 function lineStyleColor(d) { //Passed in values have color assigned, returns color hex code.
     //console.log(d);
 
+    //If statement checks which subway line is being pass through.
     return  d == "A" || d == "A-C" || d == "C" || d == "A-C-E" || d == "E" ? "#0039a6" : 
 
             d == "B" || d == "B-D" || d == "B-D-F-M" || d == "D" || d == "F" || d == "F-M" || d == "M" ? "#ff6319" :
@@ -478,7 +492,7 @@ function lineStyleColor(d) { //Passed in values have color assigned, returns col
 //Fetch functions
 //
 
-function lineData(input,layerControl){
+function lineData(input,layerControl){ //Loads subway line geojson
     
     fetch(input)
         .then(function(response){
@@ -505,7 +519,7 @@ function lineData(input,layerControl){
         })
 }
 
-function tractData(input,layerControl){
+function tractData(input,layerControl){ //Loads census tract geojson
     prevLayerClicked = null;
     fetch(input)
         .then(function(response){
@@ -528,7 +542,7 @@ function tractData(input,layerControl){
         })
 }
 
-function stationData(input,layerControl,map){
+function stationData(input,layerControl,map){ //Loads station geojson
     var markerOptions = { //Initializes marker options
         radius: 2.2,
         fillColor:'white',
@@ -560,19 +574,6 @@ function stationData(input,layerControl,map){
         })
 
  
-}
-
-function calcRadius(value)
-{
-    var dataMin = 100.
-        minRadius = 0.5;
-    
-    if (value && value > 0)
-        var radius = 1.0083 * Math.pow(value/dataMin,0.5715) * minRadius;
-    else    
-        var radius = 0.25;
-
-    return radius;
 }
 
 document.addEventListener('DOMContentLoaded',createMap)
