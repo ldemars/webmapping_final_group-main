@@ -18,11 +18,13 @@ var frame = "WD_"; //Initializes frame - starts user on weekdays.
 
 //function to instantiate the Leaflet map
 function createMap(){
-    //create the map
+    
+    //Create bound options, store in variable bounds to be called when making map.
     var southWest = L.latLng(40.3, -75.1),
-    northEast = L.latLng(41.2, -73.100),
-    bounds = L.latLngBounds(southWest, northEast);
+        northEast = L.latLng(41.2, -73.100),
+        bounds = L.latLngBounds(southWest, northEast);
 
+    //create the map
     map = L.map('map', {
         center: [40.74, -74.006], //Centered on NYC (lat/long)
         zoom: 11,
@@ -30,11 +32,6 @@ function createMap(){
         maxBounds: bounds,
         zoomControl: false //initialize without default zoom control to allow for placement options later
     });
-
-    
-
-
-
 
     //Add zoom control with custom options
     L.control.zoom({
@@ -62,21 +59,20 @@ function createMap(){
     //Add OSM base layer to map.
     baseLayer["Open Street Map"].addTo(map);
 
-    //Create overlay control, initialized with baseLayer and no overlays. 
+    //Create overlay control, initialized with baseLayer and no overlays. Sort layers alphabetically 
     var overlays 
     var layerControl = L.control.layers(baseLayer, overlays,{sortLayers: true,position:'topleft'}).addTo(map);
 
     //Initializes info controller. No data added until later when user clicks on feature.
     createInfoControl(map);
 
-    //Initializes dropdown menu controller.
-    createDropdown(map);
-
     //call data functions - adds each to map. Three separate functions required as we need to perform different tasks for each(?).
     lineData(filePath[1],layerControl,map);
     tractData(filePath[0],layerControl,map);//Pass in filePath array value, overlay controller, and map variables.
     stationData(filePath[2],layerControl,map);
     
+    //Initializes dropdown menu controller.
+    createDropdown(map);
    
 };
 

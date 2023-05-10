@@ -18,6 +18,9 @@
     opacity:0.85;
     pointer-events:none;
 }
+.leaflet-popup-tip {
+    pointer-events:none;
+}
 .info {
     float:bottom;
     padding: 6px 8px;
