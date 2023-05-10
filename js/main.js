@@ -10,7 +10,7 @@ var frame = "WD_"; //Initializes frame - starts user on weekdays.
 
 //function to instantiate the Leaflet map
 function createMap(){
-    
+    "testing"
     //Create bound options, store in variable bounds to be called when making map.
     var southWest = L.latLng(40.3, -75.1),
         northEast = L.latLng(41.2, -73.100),
@@ -65,6 +65,10 @@ function createMap(){
         position: 'topright'
     }).addTo(map);
 
+    var windOpen = L.control.window(map,{
+        title:"Test",
+        visible:true})
+    
 };
 
 function createInfoControl(){
