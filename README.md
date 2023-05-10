@@ -1,4 +1,4 @@
-# New York City Transit Service Quality
+# New York City Transit Ridership Trends
 
 ## Team Members
 Logan DeMars, Luke Casesa
