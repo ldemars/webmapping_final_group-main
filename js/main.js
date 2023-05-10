@@ -254,7 +254,7 @@ function highlightFeatureHover(e) {
     };
 
     //Binds hover popup.
-    layer.bindPopup(layer.feature.properties[key1],{className: 'mouseoverpopup'}) //Adds hover pop up to layer object - assign class name for css
+    layer.bindPopup(layer.feature.properties[key1],{className: 'mouseoverpopup',offset: L.point(0,-15)}) //Adds hover pop up to layer object - assign class name for css
 
     //Opens pop up after binding
     layer.openPopup(); 

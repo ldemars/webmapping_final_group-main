@@ -10,19 +10,14 @@
     box-shadow: none; 
     font-weight: bold;
     background-attachment: #f4913b;
+    opacity:0.75;
 
 }
 
-.mouseoverpopupLine {
-    position:absolute;
-    top: 55px;
-    right: 50px;
-    box-shadow: none; 
-    font-weight: bold;
-    background-attachment: #f4913b;
-
+.leaflet-popup-pane {
+    opacity:0.85;
+    pointer-events:none;
 }
-
 .info {
     float:bottom;
     padding: 6px 8px;
