@@ -454,7 +454,7 @@ function lineStyleColor(d) { //Passed in values have color assigned, returns col
 
             d == "G" ? "#6cbe45" : 
 
-            d == "L" ? "#a7a9ac" :
+            d == "L" ? "#FFC0CB" :
 
             d == "J" || d == "J-Z"? "#996633" :
 
