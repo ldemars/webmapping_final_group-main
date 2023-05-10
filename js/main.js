@@ -471,7 +471,7 @@ function lineStyleColor(d) { //Passed in values have color assigned, returns col
 
             d == "T" ? "#00add0" :
 
-            d == "S" ? "#808183" :
+            d == "S" ? "#7120b3" :
                         "#000000" ;
 }
 
