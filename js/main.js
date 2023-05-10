@@ -19,12 +19,22 @@ var frame = "WD_"; //Initializes frame - starts user on weekdays.
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
+    var southWest = L.latLng(40.3, -75),
+    northEast = L.latLng(41.2, -73.000),
+    bounds = L.latLngBounds(southWest, northEast);
+
     map = L.map('map', {
         center: [40.74, -74.006], //Centered on NYC (lat/long)
         zoom: 11,
         minZoom: 9,
+        maxBounds: bounds,
         zoomControl: false //initialize without default zoom control to allow for placement options later
     });
+
+    
+
+
+
 
     //Add zoom control with custom options
     L.control.zoom({
